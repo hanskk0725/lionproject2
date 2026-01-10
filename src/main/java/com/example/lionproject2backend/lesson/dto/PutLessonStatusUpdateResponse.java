@@ -1,4 +1,4 @@
-package com.example.lionproject2backend.dto.lesson;
+package com.example.lionproject2backend.lesson.dto;
 
 import com.example.lionproject2backend.lesson.domain.LessonStatus;
 import lombok.Builder;
@@ -7,7 +7,14 @@ import lombok.Getter;
 import java.time.LocalDateTime;
 
 /**
- * 수업 수락 응답 API
+ * Put /api/lessons/{lessonId}/accept - 수업 수락
+ *
+ * query
+ * UPDATE lessons
+ * SET status = 'APPROVED',
+ * updated_at = NOW(),
+ * WHERE id = ?
+ * AND status = 'PENDING'
  */
 @Getter
 @Builder

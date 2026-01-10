@@ -1,4 +1,4 @@
-package com.example.lionproject2backend.dto.lesson;
+package com.example.lionproject2backend.lesson.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;

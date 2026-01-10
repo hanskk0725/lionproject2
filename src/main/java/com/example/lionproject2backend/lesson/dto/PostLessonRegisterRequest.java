@@ -1,4 +1,4 @@
-package com.example.lionproject2backend.dto.lesson;
+package com.example.lionproject2backend.lesson.dto;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -8,7 +8,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 /**
- * Post /api/tutorials/{tutorialId}/lessons 요청 객체
+ * Post /api/tutorials/{tutorialId}/lessons - 수업신청 요청 객체
  */
 @Getter
 @NoArgsConstructor
