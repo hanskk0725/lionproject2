@@ -9,6 +9,7 @@ import com.example.lionproject2backend.auth.repository.RefreshTokenStorageReposi
 import com.example.lionproject2backend.global.exception.custom.CustomException;
 import com.example.lionproject2backend.global.exception.custom.ErrorCode;
 import com.example.lionproject2backend.global.security.jwt.JwtUtil;
+import com.example.lionproject2backend.global.security.jwt.TokenType;
 import com.example.lionproject2backend.user.domain.User;
 import com.example.lionproject2backend.user.domain.UserRole;
 import com.example.lionproject2backend.user.repository.UserRepository;
@@ -93,5 +94,28 @@ public class AuthService {
         response.addHeader(HttpHeaders.SET_COOKIE,
                 CookieUtil.deleteRefreshCookie(cookieProps).toString()
         );
+    }
+
+    @Transactional
+    public PostAuthLoginResponse reissue(String refreshTokenFromCookie, HttpServletResponse response) {
+
+        jwtUtil.validate(refreshTokenFromCookie);
+        jwtUtil.validateType(refreshTokenFromCookie, TokenType.REFRESH);
+
+        RefreshTokenStorage refreshTokenStorage = refreshRepo.findByRefreshToken(refreshTokenFromCookie)
+                .orElseThrow(() -> new CustomException(ErrorCode.INVALID_REFRESH_TOKEN));
+
+        User user = refreshTokenStorage.getUser();
+
+        String newAccess = jwtUtil.createAccessToken(user);
+        String newRefresh = jwtUtil.createRefreshToken(user);
+
+        refreshTokenStorage.update(newRefresh);
+
+        response.addHeader(HttpHeaders.SET_COOKIE,
+                CookieUtil.createRefreshCookie(cookieProps, newRefresh, REFRESH_COOKIE_MAX_AGE_SECONDS).toString()
+        );
+
+        return new PostAuthLoginResponse(newAccess);
     }
 }

@@ -32,8 +32,7 @@ public enum ErrorCode {
 	TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "TOKEN_001", "토큰이 만료되었습니다."),
 	TOKEN_INVALID(HttpStatus.UNAUTHORIZED, "TOKEN_002", "유효하지 않은 토큰입니다."),
 	TOKEN_NOT_FOUND(HttpStatus.UNAUTHORIZED, "TOKEN_003", "토큰이 존재하지 않습니다."),
-	TOKEN_INTERNAL(HttpStatus.INTERNAL_SERVER_ERROR, "TOKEN_004", "토큰 필터 내부 문제"), // test 용
-	MASTER_USER_ID_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR, "TOKEN_005", "해당 유저 ID 가 없음"), // 에러 시, 환경변수 확인
+	INVALID_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "TOKEN_004", "리프레시 토큰이 올바르지 않습니다."),
 
 	;
 

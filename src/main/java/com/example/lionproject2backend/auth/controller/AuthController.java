@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,5 +42,13 @@ public class AuthController {
     public void logout(Authentication authentication, HttpServletResponse response) {
         Long userId = (Long) authentication.getPrincipal();
         authService.logout(userId, response);
+    }
+
+    @PostMapping("/refresh")
+    public ApiResponse<PostAuthLoginResponse> reissue(
+            @CookieValue(name = "refreshToken") String refreshToken,
+            HttpServletResponse response) {
+        PostAuthLoginResponse reissue = authService.reissue(refreshToken, response);
+        return ApiResponse.success(reissue);
     }
 }
