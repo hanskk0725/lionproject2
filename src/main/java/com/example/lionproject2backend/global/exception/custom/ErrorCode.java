@@ -17,6 +17,7 @@ public enum ErrorCode {
 	// AUTH
 	INVALID_LOGIN(HttpStatus.UNAUTHORIZED, "AUTH_001", "이메일 또는 비밀번호가 올바르지 않습니다."),
 	ACCESS_DENIED(HttpStatus.FORBIDDEN, "AUTH_002", "접근 권한이 없습니다."),
+	AUTH_REQUIRED(HttpStatus.UNAUTHORIZED, "AUTH_003", "인증이 필요합니다."),
 
 	// USER
 	DUPLICATE_EMAIL(HttpStatus.CONFLICT, "USER_001", "이미 사용 중인 이메일입니다."),

@@ -25,7 +25,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
             AuthenticationException authException
     ) throws IOException {
 
-        ErrorCode errorCode = ErrorCode.TOKEN_INVALID;
+        ErrorCode errorCode = ErrorCode.AUTH_REQUIRED;
 
         response.setCharacterEncoding("UTF-8");
         response.setStatus(errorCode.getStatus().value());
