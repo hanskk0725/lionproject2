@@ -53,6 +53,7 @@ public class LessonController {
      * 수업 신청 목록 조회 (멘토) - 인증 필요
      * Get /api/lessons/requests(?status=PENDING)
      */
+    @GetMapping("/lessons/requests")
     public ResponseEntity<ApiResponse<GetLessonRequestListResponse>> getLessonRequests(
             @RequestParam(required = false) LessonStatus status,
             @AuthenticationPrincipal Long userId
@@ -63,13 +64,68 @@ public class LessonController {
 
     /**
      * 수업 상세 조회
-     * Get /api/lessons/{lessonsId}
+     * Get /api/lessons/{lessonId}
      */
+    @GetMapping("/lessons/{lessonId}")
     public ResponseEntity<ApiResponse<GetLessonDetailResponse>> getLessonDetail(
             @PathVariable Long lessonId,
             @AuthenticationPrincipal Long userId
     ) {
         GetLessonDetailResponse response = lessonService.getLessonDetail(lessonId, userId);
+        return ResponseEntity.ok(ApiResponse.success(response));
+    }
+
+    /**
+     * 수업 승인 (멘토)
+     * PUT /api/lessons/{lessonId}/approve
+     */
+    @PutMapping("/lessons/{lessonId}/approve")
+    public ResponseEntity<ApiResponse<PutLessonStatusUpdateResponse>>  approveLesson(
+            @PathVariable Long lessonId,
+            @AuthenticationPrincipal Long userId
+    ) {
+        PutLessonStatusUpdateResponse response = lessonService.approve(lessonId, userId);
+        return ResponseEntity.ok(ApiResponse.success("수업이 승인되었습니다.",response));
+    }
+
+    /**
+     * 수업 거절 (멘토)
+     * Put /api/lessons/{lessonId}/reject
+     */
+    @PutMapping("/lessons/{lessonId}/reject")
+    public ResponseEntity<ApiResponse<PutLessonStatusUpdateResponse>> rejectLesson(
+            @PathVariable Long lessonId,
+            @AuthenticationPrincipal Long userId,
+            @Valid @RequestBody PutLessonRejectRequest request
+    ) {
+        PutLessonStatusUpdateResponse response = lessonService.reject(lessonId, userId, request);
+        return ResponseEntity.ok(ApiResponse.success("수업이 거절되었습니다.",response));
+    }
+
+    /**
+     * 수업 시작
+     * Put /api/lessons/{lessonId}/start
+     */
+    @PutMapping("/lessons/{lessonId}/start")
+    public ResponseEntity<ApiResponse<PutLessonStatusUpdateResponse>> startLesson(
+            @PathVariable Long lessonId,
+            @AuthenticationPrincipal Long userId
+    ) {
+        PutLessonStatusUpdateResponse response = lessonService.start(lessonId, userId);
+        return ResponseEntity.ok(ApiResponse.success("수업이 시작되었습니다.",response));
+    }
+
+    /**
+     * 수업 완료
+     * Put /api/lessons/{lessonId}/complete
+     */
+    @PutMapping("/lessons/{lessonId}/complete")
+    public ResponseEntity<ApiResponse<PutLessonStatusUpdateResponse>> completeLesson(
+            @PathVariable Long lessonId,
+            @AuthenticationPrincipal Long userId
+    ) {
+        PutLessonStatusUpdateResponse response = lessonService.complete(lessonId, userId);
+        return ResponseEntity.ok(ApiResponse.success("수업이 완료되었습니다.",response));
     }
 
 

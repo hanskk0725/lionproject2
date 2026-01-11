@@ -92,7 +92,8 @@ public class Lesson extends BaseEntity {
     /**
      * 수업 승인 (멘토)
      */
-    public void approve(){
+    public void approve(Long mentorId){
+        validateMentorAuthority(mentorId);
         validateStatusTransition(LessonStatus.PENDING, "승인");
         this.status = LessonStatus.APPROVED;
     }
@@ -101,7 +102,9 @@ public class Lesson extends BaseEntity {
      * 수업 거절 (멘토)
      * - rejectReason 검증, 상태 검증필요
      */
-    public void reject(String rejectReason){
+    public void reject(Long mentorId, String rejectReason){
+        validateMentorAuthority(mentorId);
+
         if (rejectReason == null || rejectReason.isBlank()) {
             throw new IllegalArgumentException("거절 사유를 입력해주세요");
         }
@@ -114,7 +117,8 @@ public class Lesson extends BaseEntity {
     /**
      * 수업 시작 (멘토)
      */
-    public void start(){
+    public void start(Long mentorId){
+        validateMentorAuthority(mentorId);
         validateStatusTransition(LessonStatus.APPROVED, "시작");
         this.status = LessonStatus.IN_PROGRESS;
     }
@@ -122,7 +126,8 @@ public class Lesson extends BaseEntity {
     /**
      * 수업 완료 (멘토)
      */
-    public void complete(){
+    public void complete(Long mentorId){
+        validateMentorAuthority(mentorId);
         validateStatusTransition(LessonStatus.IN_PROGRESS, "완료");
         this.status = LessonStatus.COMPLETED;
         this.completedAt = LocalDateTime.now();
@@ -149,6 +154,15 @@ public class Lesson extends BaseEntity {
                             action,
                             this.status.getDescription())
             );
+        }
+    }
+
+    /**
+     * 멘토 권한 검증
+     */
+    private void validateMentorAuthority(Long mentorId) {
+        if(!isMentor(mentorId)) {
+            throw new IllegalArgumentException("수업을 처리할 권한이 없습니다.");
         }
     }
 

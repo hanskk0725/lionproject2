@@ -1,6 +1,8 @@
 package com.example.lionproject2backend.lesson.dto;
 
+import com.example.lionproject2backend.lesson.domain.Lesson;
 import com.example.lionproject2backend.lesson.domain.LessonStatus;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -17,11 +19,18 @@ import java.time.LocalDateTime;
  * AND status = 'PENDING'
  */
 @Getter
-@Builder
+@Builder(access = AccessLevel.PRIVATE)
 public class PutLessonStatusUpdateResponse {
 
     private Long lessonId;
     private LessonStatus status;  // "APPROVED"
     private LocalDateTime updatedAt;
-    private String message;  // "수업이 승인되었습니다"
+
+    public static PutLessonStatusUpdateResponse from(Lesson lesson) {
+        return PutLessonStatusUpdateResponse.builder()
+                .lessonId(lesson.getId())
+                .status(lesson.getStatus())
+                .updatedAt(lesson.getUpdatedAt())
+                .build();
+    }
 }

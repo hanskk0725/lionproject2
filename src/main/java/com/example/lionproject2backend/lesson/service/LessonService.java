@@ -9,5 +9,9 @@ public interface LessonService {
     GetLessonListResponse getMyLessons(Long menteeId, LessonStatus status);
     GetLessonRequestListResponse getMyLessonRequests(Long mentorId, LessonStatus status);
     GetLessonDetailResponse getLessonDetail(Long lessonId, Long userId);
+    PutLessonStatusUpdateResponse approve(Long lessonId, Long mentorId);
+    PutLessonStatusUpdateResponse reject(Long lessonId, Long mentorId, PutLessonRejectRequest request);
+    PutLessonStatusUpdateResponse start(Long lessonId, Long mentorId);
+    PutLessonStatusUpdateResponse complete(Long lessonId, Long mentorId);
 
 }

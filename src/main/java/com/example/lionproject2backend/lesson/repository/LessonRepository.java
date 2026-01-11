@@ -22,7 +22,7 @@ public interface LessonRepository extends JpaRepository<Lesson, Long> {
             "join fetch m.user u " +
             "where l.mentee.id = :menteeId " +
             "order by l.createdAt desc")
-    List<Lesson> findByMenteeIdWithWithDetails(@Param("menteeId") Long menteeId);
+    List<Lesson> findByMenteeIdWithDetails(@Param("menteeId") Long menteeId);
 
     /**
      * 멘티가 신청한 수업 목록 (상태 필터)
@@ -48,9 +48,9 @@ public interface LessonRepository extends JpaRepository<Lesson, Long> {
     @Query("select l from Lesson l " +
             "join fetch l.tutorial t " +
             "join fetch l.mentee " +
-            "where t.mentor.id = :mentorId " +
+            "where t.mentor.user.id = :userId " +
             "order by l.createdAt desc")
-    List<Lesson> findByMentorIdWithDetails(@Param("mentorId") Long mentorId);
+    List<Lesson> findByMentorUserIdWithDetails(@Param("userId") Long userId);
 
     /**
      * 멘토에게 온 수업 신청 목록 (상태 필터)
@@ -59,11 +59,11 @@ public interface LessonRepository extends JpaRepository<Lesson, Long> {
     @Query("select l from Lesson l " +
             "join fetch l.tutorial t " +
             "join fetch l.mentee " +
-            "where t.mentor.id = :mentorId " +
+            "where t.mentor.user.id = :userId " +
             "and l.status = :status " +
             "order by l.createdAt desc")
-    List<Lesson> findByMentorIdAndStatusWithDetails(
-            @Param("mentorId") Long mentorId,
+    List<Lesson> findByMentorUserIdAndStatusWithDetails(
+            @Param("userId") Long userId,
             @Param("status") LessonStatus status);
 
     /**

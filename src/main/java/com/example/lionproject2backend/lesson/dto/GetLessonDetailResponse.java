@@ -9,7 +9,6 @@ import com.example.lionproject2backend.user.domain.UserRole;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 /**
  * Get /api/lessons/{lessonId} - 수업 상세 조회

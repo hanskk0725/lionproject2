@@ -31,7 +31,6 @@ public class LessonServiceImpl implements LessonService {
     @Override
     @Transactional
     public PostLessonRegisterResponse register(Long tutorialId, Long userId, PostLessonRegisterRequest request) {
-
         // Tutorial 조회
         Tutorial tutorial = tutorialRepository.findById(tutorialId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않은 과외입니다."));
@@ -62,7 +61,7 @@ public class LessonServiceImpl implements LessonService {
         List<Lesson> lessons;
 
         if (status == null) {
-            lessons = lessonRepository.findByMenteeIdWithWithDetails(menteeId);
+            lessons = lessonRepository.findByMenteeIdWithDetails(menteeId);
         }else{
             lessons = lessonRepository.findByMenteeIdAndStatusWithDetails(menteeId, status);
         }
@@ -79,9 +78,9 @@ public class LessonServiceImpl implements LessonService {
         List<Lesson> lessons;
 
         if(status == null) {
-            lessons = lessonRepository.findByMentorIdWithDetails(mentorId);
+            lessons = lessonRepository.findByMentorUserIdWithDetails(mentorId);
         }else{
-            lessons = lessonRepository.findByMentorIdAndStatusWithDetails(mentorId, status);
+            lessons = lessonRepository.findByMentorUserIdAndStatusWithDetails(mentorId, status);
         }
 
         return GetLessonRequestListResponse.from(lessons);
@@ -93,8 +92,78 @@ public class LessonServiceImpl implements LessonService {
      */
     @Override
     public GetLessonDetailResponse getLessonDetail(Long lessonId, Long userId) {
-        return null;
+        Lesson lesson = lessonRepository.findByIdWithDetails(lessonId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 수업입니다."));
+
+        // 권한 확인
+        if(!lesson.isParticipant(userId)) {
+            throw new IllegalArgumentException("해당 수업을 조회할 권한이 없습니다.");
+        }
+
+        return GetLessonDetailResponse.from(lesson, userId);
     }
 
+    /**
+     * 수업 승인 (멘토)
+     * PUT /api/lessons/{lessonId}/approve
+     */
+    @Override
+    @Transactional
+    public PutLessonStatusUpdateResponse approve(Long lessonId, Long mentorId) {
+        Lesson lesson = lessonRepository.findByIdWithDetails(lessonId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 수업입니다."));
 
+        // 도메인 로직 실행(상태: PENDING -> APPROVED)
+        lesson.approve(mentorId);
+
+        return PutLessonStatusUpdateResponse.from(lesson);
+    }
+
+    /**
+     * 수업 거절 (멘토)
+     * PUT /api/lessons/{lessonId}/reject
+     */
+    @Override
+    @Transactional
+    public PutLessonStatusUpdateResponse reject(Long lessonId, Long mentorId, PutLessonRejectRequest request) {
+        Lesson lesson = lessonRepository.findByIdWithDetails(lessonId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 수업입니다."));
+
+        // 도메인 로직 실행(상태: PENDING -> REJECTED)
+        lesson.reject(mentorId, request.getRejectReason());
+
+        return PutLessonStatusUpdateResponse.from(lesson);
+    }
+
+    /**
+     * 수업 시작 (멘토)
+     * PUT /api/lessons/{lessonId}/start
+     */
+    @Override
+    @Transactional
+    public PutLessonStatusUpdateResponse start(Long lessonId, Long mentorId) {
+        Lesson lesson = lessonRepository.findByIdWithDetails(lessonId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 수업입니다."));
+
+        // 도메인 로직 실행(상태: APPROVED -> IN_PROGRESS)
+        lesson.start(mentorId);
+
+        return PutLessonStatusUpdateResponse.from(lesson);
+    }
+
+    /**
+     * 수업 완료 (멘토)
+     * PUT /api/lessons/{lessonId}/complete
+     */
+    @Override
+    @Transactional
+    public PutLessonStatusUpdateResponse complete(Long lessonId, Long mentorId) {
+        Lesson lesson = lessonRepository.findByIdWithDetails(lessonId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 수업입니다."));
+
+        // 도메인 로직 실행(상태: IN_PROGRESS -> COMPLETED)
+        lesson.complete(mentorId);
+
+        return PutLessonStatusUpdateResponse.from(lesson);
+    }
 }

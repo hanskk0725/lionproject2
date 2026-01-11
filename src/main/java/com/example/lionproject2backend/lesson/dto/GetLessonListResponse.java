@@ -51,6 +51,7 @@ public class GetLessonListResponse {
                     .tutorialId(lesson.getTutorial().getId())
                     .tutorialTitle(lesson.getTutorial().getTitle())
                     .mentorName(lesson.getTutorial().getMentor().getUser().getNickname())
+                    .scheduledAt(lesson.getScheduledAt())
                     .status(lesson.getStatus())
                     .createdAt(lesson.getCreatedAt())
                     .build();
