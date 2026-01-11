@@ -8,6 +8,7 @@ import com.example.lionproject2backend.auth.dto.PostAuthSignupResponse;
 import com.example.lionproject2backend.auth.repository.RefreshTokenStorageRepository;
 import com.example.lionproject2backend.global.exception.custom.CustomException;
 import com.example.lionproject2backend.global.exception.custom.ErrorCode;
+import com.example.lionproject2backend.global.security.jwt.JwtProperties;
 import com.example.lionproject2backend.global.security.jwt.JwtUtil;
 import com.example.lionproject2backend.global.security.jwt.TokenType;
 import com.example.lionproject2backend.user.domain.User;
@@ -33,8 +34,7 @@ public class AuthService {
     private final JwtUtil jwtUtil;
     private final CookieProperties cookieProps;
     private final RefreshTokenStorageRepository refreshRepo;
-
-    private static final long REFRESH_COOKIE_MAX_AGE_SECONDS = 60L * 60 * 24 * 7;
+    private final JwtProperties jwtProperties;
 
     @Transactional
     public PostAuthSignupResponse signup(String email, String rawPassword, String nickname, UserRole role) {
@@ -50,12 +50,7 @@ public class AuthService {
 
         User savedUser = userRepository.save(user);
 
-        return PostAuthSignupResponse.builder()
-                .id(savedUser.getId())
-                .email(savedUser.getEmail())
-                .nickname(savedUser.getNickname())
-                .role(savedUser.getUserRole().name())
-                .build();
+        return PostAuthSignupResponse.from(savedUser);
     }
 
     @Transactional
@@ -78,7 +73,8 @@ public class AuthService {
                 );
 
         response.addHeader(HttpHeaders.SET_COOKIE,
-                CookieUtil.createRefreshCookie(cookieProps, refreshToken, REFRESH_COOKIE_MAX_AGE_SECONDS).toString()
+                CookieUtil.createRefreshCookie(cookieProps, refreshToken, jwtProperties.getRefreshExpMs()
+                ).toString()
         );
 
         return new PostAuthLoginResponse(accessToken);
@@ -113,7 +109,7 @@ public class AuthService {
         refreshTokenStorage.update(newRefresh);
 
         response.addHeader(HttpHeaders.SET_COOKIE,
-                CookieUtil.createRefreshCookie(cookieProps, newRefresh, REFRESH_COOKIE_MAX_AGE_SECONDS).toString()
+                CookieUtil.createRefreshCookie(cookieProps, newRefresh, jwtProperties.getRefreshExpMs()).toString()
         );
 
         return new PostAuthLoginResponse(newAccess);

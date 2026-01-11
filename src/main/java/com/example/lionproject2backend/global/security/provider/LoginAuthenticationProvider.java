@@ -35,7 +35,7 @@ public class LoginAuthenticationProvider implements AuthenticationProvider {
         return new UsernamePasswordAuthenticationToken(
                 user.getId(),
                 null,
-                List.of(new SimpleGrantedAuthority("ROLE_" + user.getUserRole().name()))
+                List.of(new SimpleGrantedAuthority(user.getUserRole().getAuthority()))
         );
     }
 

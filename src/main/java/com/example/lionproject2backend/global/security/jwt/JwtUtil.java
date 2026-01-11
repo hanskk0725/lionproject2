@@ -86,7 +86,7 @@ public class JwtUtil {
         Long userId = getUserId(token);
         String role = "ROLE_" + getRole(token);
 
-        var authorities = List.of(new SimpleGrantedAuthority(role));
+        List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(role));
 
         return new UsernamePasswordAuthenticationToken(userId, null, authorities);
     }
