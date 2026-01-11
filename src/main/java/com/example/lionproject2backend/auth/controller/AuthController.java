@@ -3,9 +3,11 @@ package com.example.lionproject2backend.auth.controller;
 
 import com.example.lionproject2backend.auth.dto.PostAuthLoginRequest;
 import com.example.lionproject2backend.auth.dto.PostAuthLoginResponse;
+import com.example.lionproject2backend.auth.dto.TokenDto;
 import com.example.lionproject2backend.auth.service.AuthService;
 import com.example.lionproject2backend.auth.dto.PostAuthSignupRequest;
 import com.example.lionproject2backend.auth.dto.PostAuthSignupResponse;
+import com.example.lionproject2backend.auth.util.AuthCookieManager;
 import com.example.lionproject2backend.global.response.ApiResponse;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -23,6 +25,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     private final AuthService authService;
+    private final AuthCookieManager authCookieManager;
+
+
 
     @PostMapping("/signup")
     public ApiResponse<PostAuthSignupResponse> signup(@Valid @RequestBody PostAuthSignupRequest req) {
@@ -34,21 +39,25 @@ public class AuthController {
 
     @PostMapping("/login")
     public ApiResponse<PostAuthLoginResponse> login(@RequestBody PostAuthLoginRequest req, HttpServletResponse response) {
-        PostAuthLoginResponse authLoginResponse = authService.login(req.getEmail(), req.getPassword(), response);
-        return ApiResponse.success(authLoginResponse);
+        TokenDto tokenDto = authService.login(req.getEmail(), req.getPassword());
+        authCookieManager.addRefreshToken(response, tokenDto.getRefreshToken());
+        return ApiResponse.success(new PostAuthLoginResponse(tokenDto.getAccessToken()));
     }
 
     @PostMapping("/logout")
     public void logout(Authentication authentication, HttpServletResponse response) {
         Long userId = (Long) authentication.getPrincipal();
-        authService.logout(userId, response);
+        authService.logout(userId);
+        authCookieManager.deleteRefreshToken(response);
     }
 
     @PostMapping("/refresh")
     public ApiResponse<PostAuthLoginResponse> reissue(
             @CookieValue(name = "refreshToken") String refreshToken,
             HttpServletResponse response) {
-        PostAuthLoginResponse reissue = authService.reissue(refreshToken, response);
-        return ApiResponse.success(reissue);
+        TokenDto tokenDto = authService.reissue(refreshToken);
+
+        authCookieManager.addRefreshToken(response, tokenDto.getRefreshToken());
+        return ApiResponse.success(new PostAuthLoginResponse(tokenDto.getAccessToken()));
     }
 }
