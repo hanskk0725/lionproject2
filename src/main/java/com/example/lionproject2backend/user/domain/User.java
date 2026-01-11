@@ -37,23 +37,14 @@ public class User extends BaseEntity{
     @Column(columnDefinition = "TEXT")
     private String introduction;
 
-    public User(String email, String password, String nickname, UserRole userRole, String introduction) {
-        this.email = email;
-        this.password = password;
-        this.nickname = nickname;
-        this.userRole = userRole;
-        this.introduction = introduction;
+    public static User create(String email, String encodedPassword, String nickname, UserRole role) {
+        User user = new User();
+        user.email = email;
+        user.password = encodedPassword;
+        user.nickname = nickname;
+        user.userRole = role;
+        user.introduction = null;
+        return user;
     }
-
-    public void updateProfile(String nickname, String introduction) {
-        if (nickname != null) {
-            this.nickname = nickname;
-        }
-
-        if (introduction != null) {
-            this.introduction = introduction;
-        }
-    }
-
 }
 

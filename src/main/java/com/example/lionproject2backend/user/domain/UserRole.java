@@ -1,6 +1,13 @@
 package com.example.lionproject2backend.user.domain;
 
 public enum UserRole {
+    MENTOR,
     MENTEE,
-    MENTOR
+    ADMIN
+
+    ;
+
+    public String getAuthority() {
+        return "ROLE_" + name();
+    }
 }
