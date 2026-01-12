@@ -5,6 +5,7 @@ import com.example.lionproject2backend.auth.cookie.CookieUtil;
 import com.example.lionproject2backend.auth.domain.RefreshTokenStorage;
 import com.example.lionproject2backend.auth.dto.PostAuthLoginResponse;
 import com.example.lionproject2backend.auth.dto.PostAuthSignupResponse;
+import com.example.lionproject2backend.auth.dto.TokenDto;
 import com.example.lionproject2backend.auth.repository.RefreshTokenStorageRepository;
 import com.example.lionproject2backend.global.exception.custom.CustomException;
 import com.example.lionproject2backend.global.exception.custom.ErrorCode;
@@ -32,9 +33,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
-    private final CookieProperties cookieProps;
     private final RefreshTokenStorageRepository refreshRepo;
-    private final JwtProperties jwtProperties;
 
     @Transactional
     public PostAuthSignupResponse signup(String email, String rawPassword, String nickname, UserRole role) {
@@ -54,7 +53,7 @@ public class AuthService {
     }
 
     @Transactional
-    public PostAuthLoginResponse login(String email, String password, HttpServletResponse response) {
+    public TokenDto login(String email, String password) {
         Authentication auth = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(email, password)
         );
@@ -72,28 +71,19 @@ public class AuthService {
                         () -> refreshRepo.save(RefreshTokenStorage.create(user, refreshToken))
                 );
 
-        response.addHeader(HttpHeaders.SET_COOKIE,
-                CookieUtil.createRefreshCookie(cookieProps, refreshToken, jwtProperties.getRefreshExpMs()
-                ).toString()
-        );
-
-        return new PostAuthLoginResponse(accessToken);
+        return new TokenDto(accessToken, refreshToken);
     }
 
     @Transactional
-    public void logout(Long userId, HttpServletResponse response) {
+    public void logout(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         refreshRepo.deleteByUser(user);
-
-        response.addHeader(HttpHeaders.SET_COOKIE,
-                CookieUtil.deleteRefreshCookie(cookieProps).toString()
-        );
     }
 
     @Transactional
-    public PostAuthLoginResponse reissue(String refreshTokenFromCookie, HttpServletResponse response) {
+    public TokenDto reissue(String refreshTokenFromCookie) {
 
         jwtUtil.validate(refreshTokenFromCookie);
         jwtUtil.validateType(refreshTokenFromCookie, TokenType.REFRESH);
@@ -108,10 +98,6 @@ public class AuthService {
 
         refreshTokenStorage.update(newRefresh);
 
-        response.addHeader(HttpHeaders.SET_COOKIE,
-                CookieUtil.createRefreshCookie(cookieProps, newRefresh, jwtProperties.getRefreshExpMs()).toString()
-        );
-
-        return new PostAuthLoginResponse(newAccess);
+        return new TokenDto(newAccess, newRefresh);
     }
 }
