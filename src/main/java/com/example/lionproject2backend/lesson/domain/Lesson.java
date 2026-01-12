@@ -45,14 +45,7 @@ public class Lesson extends BaseEntity {
     @Column(name = "request_message", columnDefinition = "TEXT")
     private String requestMessage;
 
-<<<<<<< HEAD
     @Column(name = "scheduled_at", nullable = false)
-=======
-    //추가 컬럼
-    @Column(name = "reject_reason", columnDefinition = "TEXT")
-    private String rejectReason;
-
->>>>>>> origin/main
     private LocalDateTime scheduledAt;
 
     @Column(name = "completed_at")
