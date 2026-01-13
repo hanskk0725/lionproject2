@@ -56,6 +56,7 @@ public class SecurityConfig {
 
         http
                 .csrf(AbstractHttpConfigurer::disable)
+                .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()))
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -81,9 +82,6 @@ public class SecurityConfig {
                                 "/api/lessons/**",
                                 "/api/payments/**"
                         ).authenticated()
-                        // .requestMatchers(
-                        //         "/api/tutorials/**"
-                        // ).hasRole("MENTOR")
                         .requestMatchers(
                                 "/api/admin/**"
                         ).hasRole("ADMIN")
