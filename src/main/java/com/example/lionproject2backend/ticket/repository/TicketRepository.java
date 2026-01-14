@@ -2,6 +2,7 @@ package com.example.lionproject2backend.ticket.repository;
 
 import com.example.lionproject2backend.payment.domain.Payment;
 import com.example.lionproject2backend.ticket.domain.Ticket;
+import java.time.LocalDateTime;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -25,4 +26,11 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
 
     // 멘티의 전체 이용권 목록
     List<Ticket> findByMenteeIdOrderByCreatedAtDesc(Long menteeId);
+
+    @Query("select count(distinct t.tutorial.id) "
+            + "from Ticket t "
+            + "where t.mentee.id = :menteeId "
+            + "and t.remainingCount > 0 "
+            + "and (t.expiredAt is null or t.expiredAt > CURRENT_TIMESTAMP)")
+    long countActiveTutorials(@Param("menteeId") Long menteeId);
 }

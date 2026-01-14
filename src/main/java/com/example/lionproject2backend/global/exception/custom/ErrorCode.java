@@ -40,7 +40,14 @@ public enum ErrorCode {
 	REVIEW_NOT_FOUND(HttpStatus.NOT_FOUND, "REVIEW_001","리뷰를 찾을 수 없습니다."),
 	REVIEW_ALREADY_EXISTS(HttpStatus.CONFLICT, "REVIEW_002","이미 해당 튜토리얼에 리뷰가 존재합니다."),
 	REVIEW_CREATE_NOT_ENOUGH_COMPLETED(HttpStatus.BAD_REQUEST, "REVIEW_003","리뷰 작성은 최소 수강 완료 횟수 이후 가능합니다."),
-	REVIEW_FORBIDDEN(HttpStatus.FORBIDDEN, "REVIEW_004","본인이 작성한 리뷰만 접근할 수 있습니다.");
+	REVIEW_FORBIDDEN(HttpStatus.FORBIDDEN, "REVIEW_004","본인이 작성한 리뷰만 접근할 수 있습니다."),
+
+	PAYMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "PAYMENT_001","결제 정보를 찾을 수 없습니다."),
+
+
+	TICKET_NOT_FOUND(HttpStatus.NOT_FOUND, "TICKET_001","티켓 정보를 찾을 수 없습니다. 관리자에게 문의 부탁드립니다"),
+
+
 
 	;
 

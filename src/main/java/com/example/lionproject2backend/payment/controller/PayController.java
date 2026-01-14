@@ -1,14 +1,16 @@
 package com.example.lionproject2backend.payment.controller;
 
 import com.example.lionproject2backend.global.response.ApiResponse;
-import com.example.lionproject2backend.payment.dto.PaymentCreateRequest;
-import com.example.lionproject2backend.payment.dto.PaymentCreateResponse;
-import com.example.lionproject2backend.payment.dto.PaymentVerifyRequest;
-import com.example.lionproject2backend.payment.dto.PaymentVerifyResponse;
+import com.example.lionproject2backend.payment.domain.PaymentStatus;
+import com.example.lionproject2backend.payment.dto.*;
 import com.example.lionproject2backend.payment.service.PaymentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -46,5 +48,45 @@ public class PayController {
         log.info("결제 검증 요청 - paymentId: {}, impUid: {}", paymentId, request.getImpUid());
         PaymentVerifyResponse response = paymentService.verifyAndCompletePayment(paymentId, request, userId);
         return ResponseEntity.ok(ApiResponse.success("결제가 완료되었습니다.", response));
+    }
+
+    /**
+     * 결제 상세 조회
+     * GET /api/payments/{paymentId}
+     */
+    @GetMapping("/payments/{paymentId}")
+    public ResponseEntity<ApiResponse<GetPaymentDetailResponse>> getPaymentDetail(
+            @PathVariable Long paymentId,
+            @AuthenticationPrincipal Long userId
+    ) {
+        GetPaymentDetailResponse response = paymentService.getPaymentDetail(paymentId, userId);
+        return ResponseEntity.ok(ApiResponse.success(response));
+    }
+
+    /**
+     * 결제 목록 조회
+     * GET /api/payments?page=0&size=10&status=PAID&keyword=검색어
+     */
+    @GetMapping("/payments")
+    public ResponseEntity<ApiResponse<Page<GetPaymentListResponse>>> getPaymentList(
+            @RequestParam(required = false) PaymentStatus status,
+            @RequestParam(required = false) String keyword,
+            @PageableDefault(page = 0, size = 4, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
+            @AuthenticationPrincipal Long userId
+    ) {
+        Page<GetPaymentListResponse> response = paymentService.getPaymentList(userId, status, keyword, pageable);
+        return ResponseEntity.ok(ApiResponse.success(response));
+    }
+
+    /**
+     * 결제 통계 조회
+     * GET /api/payments/stats
+     */
+    @GetMapping("/payments/stats")
+    public ResponseEntity<ApiResponse<GetPaymentStatsResponse>> getPaymentStats(
+            @AuthenticationPrincipal Long userId
+    ) {
+        GetPaymentStatsResponse response = paymentService.getPaymentStats(userId);
+        return ResponseEntity.ok(ApiResponse.success(response));
     }
 }
