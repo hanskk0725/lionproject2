@@ -74,6 +74,7 @@ public class SecurityConfig {
                                 "/api/tutorials",
                                 "/api/tutorials/*",
                                 "/api/tutorials/search",
+                                "/api/tutorials/*/calendar",
                                 "/api/mentors/*/reviews",
                                 "/api/tutorials/*/reviews",
                                 "/api/auth/check-email",

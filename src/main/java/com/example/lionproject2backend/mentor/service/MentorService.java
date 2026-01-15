@@ -99,7 +99,6 @@ public class MentorService {
     /**
      * 멘토 상세 조회
      */
-
     public GetMentorDetailResponse getMentor(Long mentorId) {
 
         Mentor mentor = mentorRepository.findById(mentorId)
@@ -114,5 +113,15 @@ public class MentorService {
         List<Review> reviews = reviewRepository.findByMentorId(mentorId);
 
         return GetMentorDetailResponse.from(mentor, skills, tutorials, reviews);
+    }
+
+    /**
+     * 현재 로그인한 사용자의 멘토 프로필 조회
+     */
+    public GetMentorDetailResponse getMentorByUserId(Long userId) {
+        Mentor mentor = mentorRepository.findByUserId(userId)
+                .orElseThrow(() -> new IllegalArgumentException("멘토 정보를 찾을 수 없습니다."));
+
+        return getMentor(mentor.getId());
     }
 }

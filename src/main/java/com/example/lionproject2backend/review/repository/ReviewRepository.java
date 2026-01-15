@@ -17,4 +17,6 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     Optional<Review> findByIdAndTutorialId(Long reviewId, Long tutorialId);
 
     List<Review> findByMentorId(Long mentorId);
+
+    List<Review> findByMenteeIdOrderByCreatedAtDesc(Long menteeId);
 }

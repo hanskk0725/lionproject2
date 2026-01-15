@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.util.List;
 
 @Service
@@ -158,5 +159,22 @@ public class LessonServiceImpl implements LessonService {
         lesson.complete(mentorId);
 
         return PutLessonStatusUpdateResponse.from(lesson);
+    }
+
+    /**
+     * 달력 예약 현황 조회 (공개)
+     * GET /api/tutorials/{tutorialId}/calendar?year=&month=
+     */
+    @Override
+    public GetCalendarLessonsResponse getCalendarLessons(Long tutorialId, int year, int month) {
+        YearMonth yearMonth = YearMonth.of(year, month);
+        LocalDateTime startDate = yearMonth.atDay(1).atStartOfDay();
+        LocalDateTime endDate = yearMonth.plusMonths(1).atDay(1).atStartOfDay();
+
+        List<Lesson> lessons = lessonRepository.findByTutorialIdAndDateRange(
+                tutorialId, startDate, endDate
+        );
+
+        return GetCalendarLessonsResponse.from(lessons);
     }
 }
