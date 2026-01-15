@@ -2,12 +2,16 @@ package com.example.lionproject2backend.mentor.service;
 
 import com.example.lionproject2backend.mentor.domain.Mentor;
 import com.example.lionproject2backend.mentor.domain.MentorSkill;
+import com.example.lionproject2backend.mentor.domain.MentorStatus;
 import com.example.lionproject2backend.mentor.dto.*;
 import com.example.lionproject2backend.mentor.repository.MentorRepository;
 import com.example.lionproject2backend.mentor.repository.MentorSkillRepository;
+import com.example.lionproject2backend.review.domain.Review;
+import com.example.lionproject2backend.review.repository.ReviewRepository;
 import com.example.lionproject2backend.skill.domain.Skill;
 import com.example.lionproject2backend.skill.repository.SkillRepository;
 import com.example.lionproject2backend.tutorial.domain.Tutorial;
+import com.example.lionproject2backend.tutorial.repository.TutorialRepository;
 import com.example.lionproject2backend.user.domain.User;
 import com.example.lionproject2backend.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +30,8 @@ public class MentorService {
     private final UserRepository userRepository;
     private final SkillRepository skillRepository;
     private final MentorSkillRepository mentorSkillRepository;
+    private final TutorialRepository tutorialRepository;
+    private final ReviewRepository reviewRepository;
 
     /**
      * 멘토 신청 (자동 승인 상태)
@@ -45,6 +51,9 @@ public class MentorService {
         Mentor mentor = new Mentor(user, request.getCareer());
         Mentor savedMentor = mentorRepository.save(mentor);
 
+        // 사용자 역할을 MENTOR로 변경
+        user.promoteToMentor();
+
         // 스킬 등록 (없으면 생성/있으면 재사용)
         for (String skillName : request.getSkills()) {
             Skill skill = skillRepository.findBySkillName(skillName)
@@ -61,7 +70,9 @@ public class MentorService {
     /**
      * 멘토 상세 조회
      */
+
     public GetMentorDetailResponse getMentor(Long mentorId) {
+
         Mentor mentor = mentorRepository.findById(mentorId)
                 .orElseThrow(() -> new IllegalArgumentException("멘토를 찾을 수 없습니다."));
 
@@ -70,13 +81,20 @@ public class MentorService {
                 .map(ms -> ms.getSkill().getSkillName())
                 .collect(Collectors.toList());
 
-        return new GetMentorDetailResponse(
-                mentor.getId(),
-                mentor.getUser().getNickname(),
-                mentor.getCareer(),
-                mentor.getReviewCount(),
-                skills
-        );
+        List<Tutorial> tutorials = tutorialRepository.findByMentorId(mentorId);
+        List<Review> reviews = reviewRepository.findByMentorId(mentorId);
+
+        return GetMentorDetailResponse.from(mentor, skills, tutorials, reviews);
+    }
+
+    /**
+     * 현재 로그인한 사용자의 멘토 프로필 조회
+     */
+    public GetMentorDetailResponse getMentorByUserId(Long userId) {
+        Mentor mentor = mentorRepository.findByUserId(userId)
+                .orElseThrow(() -> new IllegalArgumentException("멘토 정보를 찾을 수 없습니다."));
+
+        return getMentor(mentor.getId());
     }
 
     /**
