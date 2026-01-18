@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import Layout from './components/layout/Layout';
 import HomePage from './pages/HomePage';
-import MentorListPage from './pages/MentorListPage';
+import TutorialListPage from './pages/TutorialListPage'
 import MentorDetailPage from './pages/MentorDetailPage';
 import AuthPage from './pages/AuthPage';
 import QnAListPage from './pages/QnAListPage';
@@ -43,7 +43,7 @@ function App() {
         <Route element={<Layout onToggleDarkMode={toggleDarkMode} />}>
           <Route path="/" element={<HomePage />} />
           <Route path="/how-it-works" element={<HowItWorksPage />} />
-          <Route path="/mentors" element={<MentorListPage />} />
+            <Route path="/tutorials" element={<TutorialListPage />} />
           <Route path="/mentor/:id" element={<MentorDetailPage />} />
           <Route path="/mentor/apply" element={<MentorApplicationPage />} />
           <Route path="/login" element={<AuthPage />} />
