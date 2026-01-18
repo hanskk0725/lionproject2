@@ -40,7 +40,7 @@ export default function Footer() {
           <h4 className="font-bold mb-6">플랫폼</h4>
           <ul className="space-y-3 text-sm text-slate-500 dark:text-slate-400">
             <li>
-              <Link to="/mentors" className="hover:text-primary transition-colors">
+              <Link to="/tutorials" className="hover:text-primary transition-colors">
                 강의 찾기
               </Link>
             </li>

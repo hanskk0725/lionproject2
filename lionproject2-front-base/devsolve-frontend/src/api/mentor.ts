@@ -142,3 +142,11 @@ export const getSkills = async (): Promise<ApiResponse<Skill[]>> => {
   const response = await api.get<ApiResponse<Skill[]>>('/api/skills');
   return response.data;
 };
+
+/**
+ * 내 멘토 프로필 조회 (인증 필요)
+ */
+export const getMyMentorProfile = async (): Promise<ApiResponse<MentorDetail>> => {
+    const response = await api.get<ApiResponse<MentorDetail>>('/api/mentors/me');
+    return response.data;
+};
