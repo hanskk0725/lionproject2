@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
 import * as authApi from '../api/auth';
@@ -32,7 +33,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
           if (response.success && response.data) {
             setUser(response.data);
           }
-        } catch (error) {
+        } catch {
           // 토큰이 유효하지 않으면 삭제
           localStorage.removeItem('accessToken');
         }

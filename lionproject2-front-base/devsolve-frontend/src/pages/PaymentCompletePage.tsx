@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -14,15 +15,15 @@ export default function PaymentCompletePage() {
   const location = useLocation();
   const state = location.state as PaymentState | null;
 
-  // 결제 정보 (state가 없으면 기본값 사용)
-  const paymentInfo = {
+  // 결제 정보 (state가 없으면 기본값 사용) - useState로 초기화하여 불순 함수 문제 해결
+  const [paymentInfo] = useState(() => ({
     tutorialTitle: state?.tutorialTitle || 'React & Next.js 엔터프라이즈 아키텍처 1:1 멘토링',
     mentorName: state?.mentorName || 'DevMaster Kim',
     amount: state?.amount || 150000,
     scheduledAt: state?.scheduledAt || '2024년 1월 22일 19:00',
-    paymentId: state?.paymentId || 'LION-' + Date.now(),
+    paymentId: state?.paymentId || `LION-${Date.now()}`,
     paidAt: new Date().toLocaleString('ko-KR'),
-  };
+  }));
 
   return (
     <div className="pt-16">

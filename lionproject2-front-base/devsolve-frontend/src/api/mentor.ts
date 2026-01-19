@@ -23,6 +23,7 @@ export interface MentorDetail {
   nickname: string;
   career: string;
   reviewCount: number;
+  averageRating: number;
   skills: string[];
   tutorials: TutorialInfo[];
   reviews: ReviewInfo[];
@@ -210,4 +211,12 @@ export const deleteMyAvailability = async (
     `/api/mentors/me/availability/${availabilityId}`
   );
   return response.data;
+};
+
+/**
+ * 내 멘토 프로필 조회 (인증 필요)
+ */
+export const getMyMentorProfile = async (): Promise<ApiResponse<MentorDetail>> => {
+    const response = await api.get<ApiResponse<MentorDetail>>('/api/mentors/me');
+    return response.data;
 };

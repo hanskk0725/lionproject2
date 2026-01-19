@@ -15,14 +15,19 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent } from '@/components/ui/card';
 import { TimeSlotGrid } from './TimeSlotGrid';
 import * as lessonApi from '@/api/lesson';
-import type { Tutorial } from '@/api/tutorial';
 import type { Ticket } from '@/api/payment';
 import type { TimeSlot } from '@/types';
+
+interface TutorialInfo {
+  id: number;
+  title: string;
+  duration: number;
+}
 
 interface LessonBookingDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  tutorial: Tutorial;
+  tutorial: TutorialInfo;
   ticket: Ticket;
   onSuccess: () => void;
   initialDate?: Date;  // 초기 선택 날짜 (요일 클릭 시)
@@ -63,7 +68,7 @@ export function LessonBookingDialog({
           setSlots([]);
           setError(res.message || '시간 슬롯을 불러오는데 실패했습니다.');
         }
-      } catch (err) {
+      } catch {
         setSlots([]);
         setError('네트워크 오류가 발생했습니다.');
       } finally {
@@ -113,7 +118,7 @@ export function LessonBookingDialog({
       } else {
         setError(res.message || '수업 신청에 실패했습니다.');
       }
-    } catch (err) {
+    } catch {
       setError('네트워크 오류가 발생했습니다.');
     } finally {
       setIsSubmitting(false);

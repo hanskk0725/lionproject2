@@ -85,7 +85,8 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/api/user/**",
                                 "/api/lessons/**",
-                                "/api/payments/**"
+                                "/api/payments/**",
+                                "/api/settlements/**"
                         ).authenticated()
                         .requestMatchers(
                                 "/api/admin/**"
@@ -114,7 +115,8 @@ public class SecurityConfig {
         config.setAllowedOriginPatterns(List.of(
                 "http://localhost:3000",
                 "http://localhost:5173",
-                "http://localhost:5174"
+                "http://localhost:5174",
+                "http://localhost:5175"
         ));
         config.setAllowedMethods(List.of("GET","POST","PUT","PATCH","DELETE","OPTIONS"));
         config.setAllowedHeaders(List.of(

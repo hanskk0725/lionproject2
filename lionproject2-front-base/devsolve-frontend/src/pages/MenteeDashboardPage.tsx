@@ -3,11 +3,10 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import * as lessonApi from '@/api/lesson';
 import * as paymentApi from '@/api/payment';
-import * as mentorApi from '@/api/mentor';
 import type { Lesson } from '@/api/lesson';
 import type { Ticket } from '@/api/payment';
-import type { Mentor } from '@/api/mentor';
 import { LessonBookingDialog } from '@/components/booking/LessonBookingDialog';
+import { ReviewWriteDialog } from '@/components/review/ReviewWriteDialog';
 
 function formatDate(dateString: string): string {
   const date = new Date(dateString);
@@ -25,32 +24,25 @@ function formatTime(dateString: string): string {
   return `${hours}:${minutes}`;
 }
 
-function getStatusBadge(status: string): { label: string; className: string } {
-  const statusMap: Record<string, { label: string; className: string }> = {
-    REQUESTED: { label: '승인 대기', className: 'bg-amber-500/15 text-amber-500' },
-    CONFIRMED: { label: '수업 예정', className: 'bg-blue-500/15 text-blue-500' },
-    SCHEDULED: { label: '수강 중', className: 'bg-green-500/15 text-green-500' },
-    IN_PROGRESS: { label: '수강 중', className: 'bg-green-500/15 text-green-500' },
-    COMPLETED: { label: '수강 완료', className: 'bg-slate-500/15 text-slate-400' },
-    REJECTED: { label: '거절됨', className: 'bg-red-500/15 text-red-500' },
-    CANCELLED: { label: '취소됨', className: 'bg-slate-500/15 text-slate-500' },
-  };
-  return statusMap[status] || { label: status, className: 'bg-slate-500/15 text-slate-500' };
-}
 
 export default function MenteeDashboardPage() {
-  const { user, isAuthenticated, isLoading: authLoading } = useAuth();
-  const navigate = useNavigate();
+    const { user, isAuthenticated, isLoading: authLoading } = useAuth();
+    const navigate = useNavigate();
 
   const [lessons, setLessons] = useState<Lesson[]>([]);
   const [tickets, setTickets] = useState<Ticket[]>([]);
-  const [mentors, setMentors] = useState<Mentor[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [activeNav, setActiveNav] = useState('dashboard');
   const [reservationModal, setReservationModal] = useState<{
     isOpen: boolean;
     ticket: Ticket | null;
   }>({ isOpen: false, ticket: null });
+  const [reviewModal, setReviewModal] = useState<{
+    isOpen: boolean;
+    tutorialId: number;
+    tutorialTitle: string;
+    mentorNickname: string;
+  }>({ isOpen: false, tutorialId: 0, tutorialTitle: '', mentorNickname: '' });
 
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
@@ -66,10 +58,9 @@ export default function MenteeDashboardPage() {
   const fetchData = async () => {
     setIsLoading(true);
     try {
-      const [lessonsRes, ticketsRes, mentorsRes] = await Promise.all([
+      const [lessonsRes, ticketsRes] = await Promise.all([
         lessonApi.getMyLessons(),
         paymentApi.getMyTickets(),
-        mentorApi.getMentors({ size: 5 }),
       ]);
 
       if (lessonsRes.success && lessonsRes.data) {
@@ -77,9 +68,6 @@ export default function MenteeDashboardPage() {
       }
       if (ticketsRes.success && ticketsRes.data) {
         setTickets(ticketsRes.data);
-      }
-      if (mentorsRes.success && mentorsRes.data) {
-        setMentors(mentorsRes.data.content);
       }
     } catch (error) {
       console.error('Failed to fetch dashboard data:', error);
@@ -146,9 +134,8 @@ export default function MenteeDashboardPage() {
           {/* Profile Card */}
           <div className="bg-slate-900 rounded-2xl p-6 text-center mb-5 border border-slate-800">
             <div className="relative inline-block mb-4">
-              <div className="w-20 h-20 rounded-full bg-gradient-to-br from-slate-700 to-slate-800 flex items-center justify-center text-3xl border-2 border-slate-700 relative">
+              <div className="w-20 h-20 rounded-full bg-gradient-to-br from-slate-700 to-slate-800 flex items-center justify-center text-3xl border-2 border-slate-700">
                 😺
-                <span className="absolute -top-1 -right-1 px-1 py-0.5 bg-red-500 text-[8px] text-white rounded font-bold">MOCK</span>
               </div>
               <button className="absolute bottom-0 right-0 w-7 h-7 bg-primary rounded-full flex items-center justify-center border-2 border-slate-900">
                 <span className="material-symbols-outlined text-sm text-white">edit</span>
@@ -222,7 +209,7 @@ export default function MenteeDashboardPage() {
               <div className="flex-1">
                 <p className="text-xs text-primary font-semibold uppercase tracking-wide mb-1">다음 예정 수업</p>
                 <p className="text-base font-semibold text-white mb-1">{nextLesson.tutorialTitle}</p>
-                <p className="text-sm text-slate-400">{nextLesson.mentorName} 멘토 · 60분 <span className="px-1 py-0.5 bg-red-500 text-[8px] text-white rounded font-bold">MOCK</span></p>
+                <p className="text-sm text-slate-400">{nextLesson.mentorName} 멘토 · 60분</p>
               </div>
               <div className="text-right mr-4">
                 <p className="text-sm font-semibold text-white">{formatDate(nextLesson.scheduledAt!)}</p>
@@ -283,9 +270,8 @@ export default function MenteeDashboardPage() {
                   >
                     <div className="font-medium text-white text-sm">{course.tutorialTitle}</div>
                     <div className="flex items-center gap-2.5">
-                      <div className="w-8 h-8 rounded-full bg-gradient-to-br from-slate-700 to-slate-800 flex items-center justify-center text-xs relative">
+                      <div className="w-8 h-8 rounded-full bg-gradient-to-br from-slate-700 to-slate-800 flex items-center justify-center text-xs">
                         👨‍💻
-                        <span className="absolute -top-1 -right-1 px-0.5 py-0 bg-red-500 text-[6px] text-white rounded font-bold">M</span>
                       </div>
                       <span className="text-sm text-slate-400">{course.mentorNickname} 멘토</span>
                     </div>
@@ -314,7 +300,15 @@ export default function MenteeDashboardPage() {
                           예약하기
                         </button>
                       ) : course.status === 'completed' ? (
-                        <button className="px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white text-xs font-medium hover:bg-slate-700 transition-colors">
+                        <button
+                          onClick={() => setReviewModal({
+                            isOpen: true,
+                            tutorialId: course.tutorialId,
+                            tutorialTitle: course.tutorialTitle,
+                            mentorNickname: course.mentorNickname,
+                          })}
+                          className="px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white text-xs font-medium hover:bg-slate-700 transition-colors"
+                        >
                           리뷰 쓰기
                         </button>
                       ) : (
@@ -334,13 +328,13 @@ export default function MenteeDashboardPage() {
             <div className="absolute -right-12 -top-12 w-48 h-48 bg-primary/10 rounded-full blur-2xl" />
             <div className="relative z-10">
               <h3 className="text-xl font-semibold text-white mb-2">당신을 위한 새로운 멘토를 찾아보세요</h3>
-              <p className="text-sm text-slate-400">사용자님의 관심 기술인 'React' <span className="px-1 py-0.5 bg-red-500 text-[8px] text-white rounded font-bold">MOCK</span> 전문가들이 기다리고 있습니다.</p>
+              <p className="text-sm text-slate-400">다양한 기술 스택의 전문가들이 기다리고 있습니다.</p>
             </div>
             <Link
-              to="/mentors"
+              to="/tutorials"
               className="relative z-10 px-6 py-3 bg-slate-950 border border-slate-700 rounded-xl text-white text-sm font-medium flex items-center gap-2 hover:bg-slate-800 hover:border-primary transition-colors"
             >
-              멘토 리스트 보기
+              더 많은 강의 보기
               <span className="material-symbols-outlined text-lg">arrow_forward</span>
             </Link>
           </div>
@@ -356,7 +350,7 @@ export default function MenteeDashboardPage() {
             id: reservationModal.ticket.tutorialId,
             title: reservationModal.ticket.tutorialTitle,
             duration: 60,
-          } as any}
+          }}
           ticket={reservationModal.ticket}
           onSuccess={() => {
             fetchData();
@@ -364,6 +358,19 @@ export default function MenteeDashboardPage() {
           }}
         />
       )}
+
+      {/* 리뷰 작성 모달 */}
+      <ReviewWriteDialog
+        open={reviewModal.isOpen}
+        onOpenChange={(open) => setReviewModal({ ...reviewModal, isOpen: open })}
+        tutorialId={reviewModal.tutorialId}
+        tutorialTitle={reviewModal.tutorialTitle}
+        mentorNickname={reviewModal.mentorNickname}
+        onSuccess={() => {
+          alert('리뷰가 등록되었습니다!');
+          fetchData();
+        }}
+      />
     </div>
   );
 }
