@@ -106,4 +106,61 @@ public interface LessonRepository extends JpaRepository<Lesson, Long> {
             @Param("startDate") LocalDateTime startDate,
             @Param("endDate") LocalDateTime endDate
     );
+
+    /**
+     * 튜토리얼별 특정 기간의 수업 목록 (상태 필터)
+     */
+    @Query("SELECT l FROM Lesson l " +
+            "JOIN l.ticket tk " +
+            "WHERE tk.tutorial.id = :tutorialId " +
+            "AND l.scheduledAt >= :startDateTime " +
+            "AND l.scheduledAt < :endDateTime " +
+            "AND l.status IN :statuses")
+    List<Lesson> findByTutorialIdAndScheduledAtBetweenAndStatusIn(
+            @Param("tutorialId") Long tutorialId,
+            @Param("startDateTime") LocalDateTime startDateTime,
+            @Param("endDateTime") LocalDateTime endDateTime,
+            @Param("statuses") List<LessonStatus> statuses
+    );
+
+    /**
+     * 중복 예약 확인 (특정 시간대에 예약된 수업이 있는지)
+     */
+    @Query("SELECT CASE WHEN COUNT(l) > 0 THEN true ELSE false END " +
+            "FROM Lesson l " +
+            "JOIN l.ticket tk " +
+            "WHERE tk.tutorial.id = :tutorialId " +
+            "AND l.scheduledAt = :scheduledAt " +
+            "AND l.status IN :statuses")
+    boolean existsConflictingLesson(
+            @Param("tutorialId") Long tutorialId,
+            @Param("scheduledAt") LocalDateTime scheduledAt,
+            @Param("statuses") List<LessonStatus> statuses
+    );
+
+    // =============== 스케줄러용 쿼리 메서드 =============== //
+
+    /**
+     * 특정 상태이고 scheduledAt이 지정 시간 이전인 수업 조회
+     * (스케줄러: CONFIRMED → SCHEDULED 전이용)
+     */
+    @Query("SELECT l FROM Lesson l " +
+            "JOIN FETCH l.ticket tk " +
+            "JOIN FETCH tk.tutorial t " +
+            "WHERE l.status = :status " +
+            "AND l.scheduledAt <= :time")
+    List<Lesson> findByStatusAndScheduledAtBefore(
+            @Param("status") LessonStatus status,
+            @Param("time") LocalDateTime time
+    );
+
+    /**
+     * 특정 상태의 모든 수업 조회 (Tutorial fetch 포함)
+     * (스케줄러: SCHEDULED → COMPLETED 전이용)
+     */
+    @Query("SELECT l FROM Lesson l " +
+            "JOIN FETCH l.ticket tk " +
+            "JOIN FETCH tk.tutorial t " +
+            "WHERE l.status = :status")
+    List<Lesson> findByStatus(@Param("status") LessonStatus status);
 }

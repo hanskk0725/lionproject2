@@ -16,6 +16,7 @@ DROP TABLE IF EXISTS `tickets`;
 DROP TABLE IF EXISTS `payments`;
 DROP TABLE IF EXISTS `tutorial_skills`;
 DROP TABLE IF EXISTS `tutorials`;
+DROP TABLE IF EXISTS `mentor_availability`;
 DROP TABLE IF EXISTS `mentor_skills`;
 DROP TABLE IF EXISTS `mentors`;
 DROP TABLE IF EXISTS `skills`;
@@ -82,7 +83,25 @@ CREATE TABLE `mentors` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ============================================================
--- 5. mentor_skills (멘토-스킬 매핑)
+-- 5. mentor_availability (멘토 가용 시간)
+-- ============================================================
+CREATE TABLE `mentor_availability` (
+  `id` BIGINT PRIMARY KEY AUTO_INCREMENT,
+  `mentor_id` BIGINT NOT NULL,
+  `day_of_week` VARCHAR(10) NOT NULL COMMENT 'MONDAY, TUESDAY, ..., SUNDAY',
+  `start_time` TIME NOT NULL COMMENT '시작 시간',
+  `end_time` TIME NOT NULL COMMENT '종료 시간',
+  `is_active` BOOLEAN NOT NULL DEFAULT TRUE COMMENT '활성화 여부',
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+  UNIQUE KEY `uk_mentor_day` (`mentor_id`, `day_of_week`),
+  INDEX `idx_availability_mentor` (`mentor_id`),
+  CONSTRAINT `fk_availability_mentor` FOREIGN KEY (`mentor_id`) REFERENCES `mentors` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ============================================================
+-- 6. mentor_skills (멘토-스킬 매핑)
 -- ============================================================
 CREATE TABLE `mentor_skills` (
   `id` BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -99,7 +118,7 @@ CREATE TABLE `mentor_skills` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ============================================================
--- 6. tutorials (과외)
+-- 7. tutorials (과외)
 -- ============================================================
 CREATE TABLE `tutorials` (
   `id` BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -119,7 +138,7 @@ CREATE TABLE `tutorials` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ============================================================
--- 7. tutorial_skills (과외-스킬 매핑)
+-- 8. tutorial_skills (과외-스킬 매핑)
 -- ============================================================
 CREATE TABLE `tutorial_skills` (
   `id` BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -136,7 +155,7 @@ CREATE TABLE `tutorial_skills` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ============================================================
--- 8. payments (결제)
+-- 9. payments (결제)
 -- ============================================================
 CREATE TABLE `payments` (
   `id` BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -160,7 +179,7 @@ CREATE TABLE `payments` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ============================================================
--- 9. tickets (이용권)
+-- 10. tickets (이용권)
 -- ============================================================
 CREATE TABLE `tickets` (
   `id` BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -183,7 +202,7 @@ CREATE TABLE `tickets` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ============================================================
--- 10. lessons (수업)
+-- 11. lessons (수업)
 -- ============================================================
 CREATE TABLE `lessons` (
   `id` BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -203,7 +222,7 @@ CREATE TABLE `lessons` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ============================================================
--- 11. reviews (리뷰)
+-- 12. reviews (리뷰)
 -- ============================================================
 CREATE TABLE `reviews` (
   `id` BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -225,7 +244,7 @@ CREATE TABLE `reviews` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ============================================================
--- 12. questions (질문)
+-- 13. questions (질문)
 -- ============================================================
 CREATE TABLE `questions` (
   `id` BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -241,7 +260,7 @@ CREATE TABLE `questions` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ============================================================
--- 13. answers (답변)
+-- 14. answers (답변)
 -- ============================================================
 CREATE TABLE `answers` (
   `id` BIGINT PRIMARY KEY AUTO_INCREMENT,

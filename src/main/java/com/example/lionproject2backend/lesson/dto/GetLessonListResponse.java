@@ -37,6 +37,7 @@ public class GetLessonListResponse {
     @Builder(access = AccessLevel.PRIVATE)
     public static class MyLessonItem {
         private Long lessonId;
+        private Long ticketId;
         private Long tutorialId;
         private String tutorialTitle;
         private String mentorName;
@@ -48,6 +49,7 @@ public class GetLessonListResponse {
         public static MyLessonItem from(Lesson lesson) {
             return MyLessonItem.builder()
                     .lessonId(lesson.getId())
+                    .ticketId(lesson.getTicket().getId())
                     .tutorialId(lesson.getTutorial().getId())
                     .tutorialTitle(lesson.getTutorial().getTitle())
                     .mentorName(lesson.getTutorial().getMentor().getUser().getNickname())

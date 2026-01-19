@@ -34,7 +34,7 @@ public class TutorialController {
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<GetTutorialResponse>>> getAllTutorials() {
+public ResponseEntity<ApiResponse<List<GetTutorialResponse>>> getAllTutorials() {
         List<GetTutorialResponse> tutorials = tutorialService.getAllTutorials();
         return ResponseEntity.ok(ApiResponse.success(tutorials));
     }

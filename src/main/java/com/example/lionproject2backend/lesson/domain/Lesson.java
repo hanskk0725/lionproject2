@@ -161,4 +161,27 @@ public class Lesson extends BaseEntity {
     public boolean isCompleted() {
         return this.status == LessonStatus.COMPLETED;
     }
+
+    // =============== 스케줄러용 메서드 (멘토 검증 없이 자동 전이) =============== //
+
+    /**
+     * 스케줄러에 의한 수업 시작 (CONFIRMED → SCHEDULED)
+     */
+    public void startByScheduler() {
+        if (this.status != LessonStatus.CONFIRMED) {
+            return; // 상태가 맞지 않으면 무시
+        }
+        this.status = LessonStatus.SCHEDULED;
+    }
+
+    /**
+     * 스케줄러에 의한 수업 완료 (SCHEDULED → COMPLETED)
+     */
+    public void completeByScheduler() {
+        if (this.status != LessonStatus.SCHEDULED) {
+            return; // 상태가 맞지 않으면 무시
+        }
+        this.status = LessonStatus.COMPLETED;
+        this.completedAt = LocalDateTime.now();
+    }
 }
