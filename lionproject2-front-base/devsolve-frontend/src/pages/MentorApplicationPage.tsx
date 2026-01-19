@@ -6,8 +6,53 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useAuth } from "@/contexts/AuthContext";
 import * as mentorApi from "@/api/mentor";
+import type { MentorAvailabilityItem } from "@/api/mentor";
+
+// 요일 옵션 정의
+const DAY_OPTIONS = [
+  { value: "MONDAY", label: "매주 월요일" },
+  { value: "TUESDAY", label: "매주 화요일" },
+  { value: "WEDNESDAY", label: "매주 수요일" },
+  { value: "THURSDAY", label: "매주 목요일" },
+  { value: "FRIDAY", label: "매주 금요일" },
+  { value: "SATURDAY", label: "매주 토요일" },
+  { value: "SUNDAY", label: "매주 일요일" },
+];
+
+// 시간 옵션 정의 (07:00 ~ 22:00)
+const TIME_OPTIONS = Array.from({ length: 16 }, (_, i) => {
+  const hour = i + 7;
+  const value = `${hour.toString().padStart(2, "0")}:00`;
+  return { value, label: value };
+});
+
+// 요일 한글 변환
+const getDayLabel = (dayOfWeek: string): string => {
+  const dayMap: Record<string, string> = {
+    MONDAY: "매주 월요일",
+    TUESDAY: "매주 화요일",
+    WEDNESDAY: "매주 수요일",
+    THURSDAY: "매주 목요일",
+    FRIDAY: "매주 금요일",
+    SATURDAY: "매주 토요일",
+    SUNDAY: "매주 일요일",
+  };
+  return dayMap[dayOfWeek] || dayOfWeek;
+};
+
+// 시간 포맷팅 (HH:mm:ss -> HH:mm)
+const formatTime = (time: string): string => {
+  return time.substring(0, 5);
+};
 
 export default function MentorApplicationPage() {
   const navigate = useNavigate();
@@ -16,6 +61,12 @@ export default function MentorApplicationPage() {
   const [skillInput, setSkillInput] = useState("");
   const [career, setCareer] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // 수업 가능 시간 관련 상태
+  const [availabilities, setAvailabilities] = useState<MentorAvailabilityItem[]>([]);
+  const [selectedDay, setSelectedDay] = useState<string>("");
+  const [startTime, setStartTime] = useState<string>("19:00");
+  const [endTime, setEndTime] = useState<string>("21:00");
 
   // 페이지 진입 시 인증 상태 체크용 (로그아웃 시 알림 방지)
   const hasCheckedAuth = useRef(false);
@@ -54,6 +105,49 @@ export default function MentorApplicationPage() {
     }
   };
 
+  // 가용 시간 추가 핸들러
+  const handleAddAvailability = () => {
+    if (!selectedDay) {
+      alert("요일을 선택해주세요.");
+      return;
+    }
+    if (!startTime || !endTime) {
+      alert("시작 시간과 종료 시간을 입력해주세요.");
+      return;
+    }
+    if (startTime >= endTime) {
+      alert("종료 시간은 시작 시간보다 늦어야 합니다.");
+      return;
+    }
+
+    // 이미 등록된 요일인지 확인
+    const existingDay = availabilities.find(a => a.dayOfWeek === selectedDay);
+    if (existingDay) {
+      alert("이미 등록된 요일입니다. 기존 시간을 삭제 후 다시 추가해주세요.");
+      return;
+    }
+
+    // 로컬 상태에 임시 추가 (id는 임시값)
+    const newAvailability: MentorAvailabilityItem = {
+      id: Date.now(), // 임시 ID
+      dayOfWeek: selectedDay,
+      dayOfWeekKr: getDayLabel(selectedDay),
+      startTime: startTime + ":00",
+      endTime: endTime + ":00",
+      active: true,
+    };
+
+    setAvailabilities([...availabilities, newAvailability]);
+    setSelectedDay("");
+    setStartTime("19:00");
+    setEndTime("21:00");
+  };
+
+  // 가용 시간 삭제 핸들러
+  const handleRemoveAvailability = (id: number) => {
+    setAvailabilities(availabilities.filter(a => a.id !== id));
+  };
+
   const handleSubmit = async () => {
     // 유효성 검사
     if (skills.length === 0) {
@@ -67,6 +161,7 @@ export default function MentorApplicationPage() {
 
     setIsSubmitting(true);
     try {
+      // 1. 멘토 신청
       const response = await mentorApi.applyMentor({
         skills,
         career: career.trim(),
@@ -75,7 +170,27 @@ export default function MentorApplicationPage() {
       if (response.success) {
         // 사용자 정보 갱신 (역할이 MENTOR로 변경되었을 수 있음)
         await refreshUser();
-        alert("멘토 신청이 완료되었습니다! 심사 후 승인됩니다.");
+
+        // 2. 가용 시간 등록 (있는 경우)
+        if (availabilities.length > 0) {
+          const availabilityPromises = availabilities.map((availability) =>
+            mentorApi.addMyAvailability({
+              dayOfWeek: availability.dayOfWeek,
+              startTime: availability.startTime.substring(0, 5), // "HH:mm:ss" -> "HH:mm"
+              endTime: availability.endTime.substring(0, 5),
+            })
+          );
+
+          try {
+            await Promise.all(availabilityPromises);
+            console.log("가용 시간 등록 완료");
+          } catch (availError) {
+            console.error("가용 시간 등록 중 오류:", availError);
+            // 가용 시간 등록 실패해도 멘토 신청은 완료됨
+          }
+        }
+
+        alert("멘토 신청이 완료되었습니다!");
         navigate("/");
       } else {
         alert(response.message || "멘토 신청에 실패했습니다.");
@@ -279,14 +394,6 @@ export default function MentorApplicationPage() {
                         추가됩니다.
                       </p>
                     </div>
-                    <div className="space-y-2">
-                      <Label>경력 연차</Label>
-                      <Input
-                        type="number"
-                        placeholder="예: 5"
-                        className="h-12"
-                      />
-                    </div>
                   </div>
                 </section>
 
@@ -344,49 +451,125 @@ export default function MentorApplicationPage() {
                   </div>
                 </section>
 
-                {/* Section: Links */}
+                {/* Section: Availability */}
                 <section>
                   <CardHeader className="p-0 pb-6 border-b mb-6">
                     <CardTitle className="flex items-center gap-2">
                       <span className="material-symbols-outlined text-primary">
-                        link
+                        schedule
                       </span>
-                      포트폴리오 및 소셜 링크
+                      수업 가능 시간 설정
                     </CardTitle>
                   </CardHeader>
+
+                  {/* 시간 추가 폼 */}
                   <div className="space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="relative">
-                        <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground">
-                          language
-                        </span>
-                        <Input
-                          type="url"
-                          placeholder="개인 웹사이트 / 포트폴리오"
-                          className="h-12 pl-12"
-                        />
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+                      {/* 요일 선택 */}
+                      <div className="space-y-2">
+                        <Label>요일 선택</Label>
+                        <Select value={selectedDay} onValueChange={setSelectedDay}>
+                          <SelectTrigger className="h-12">
+                            <SelectValue placeholder="요일 선택" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {DAY_OPTIONS.map((option) => (
+                              <SelectItem key={option.value} value={option.value}>
+                                {option.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
                       </div>
-                      <div className="relative">
-                        <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground">
-                          account_circle
-                        </span>
-                        <Input
-                          type="url"
-                          placeholder="LinkedIn 프로필"
-                          className="h-12 pl-12"
-                        />
+
+                      {/* 시작 시간 */}
+                      <div className="space-y-2">
+                        <Label>시작 시간</Label>
+                        <Select value={startTime} onValueChange={setStartTime}>
+                          <SelectTrigger className="h-12">
+                            <SelectValue placeholder="시작 시간" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {TIME_OPTIONS.map((option) => (
+                              <SelectItem key={option.value} value={option.value}>
+                                {option.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
                       </div>
+
+                      {/* 종료 시간 */}
+                      <div className="space-y-2">
+                        <Label>종료 시간</Label>
+                        <Select value={endTime} onValueChange={setEndTime}>
+                          <SelectTrigger className="h-12">
+                            <SelectValue placeholder="종료 시간" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {TIME_OPTIONS.map((option) => (
+                              <SelectItem key={option.value} value={option.value}>
+                                {option.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+
+                      {/* 추가 버튼 */}
+                      <Button
+                        type="button"
+                        onClick={handleAddAvailability}
+                        className="h-12"
+                      >
+                        <span className="material-symbols-outlined text-lg mr-1">
+                          add
+                        </span>
+                        추가
+                      </Button>
                     </div>
-                    <div className="relative">
-                      <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground">
-                        terminal
-                      </span>
-                      <Input
-                        type="url"
-                        placeholder="GitHub 프로필 링크"
-                        className="h-12 pl-12"
-                      />
-                    </div>
+
+                    {/* 등록된 시간 목록 */}
+                    {availabilities.length > 0 && (
+                      <div className="space-y-3 mt-6">
+                        <Label className="text-base font-semibold">등록된 시간 목록</Label>
+                        <div className="space-y-2">
+                          {availabilities.map((availability) => (
+                            <div
+                              key={availability.id}
+                              className="flex items-center justify-between p-4 bg-slate-900 rounded-lg border border-slate-700"
+                            >
+                              <div className="flex items-center gap-3">
+                                <span className="material-symbols-outlined text-primary">
+                                  calendar_today
+                                </span>
+                                <div>
+                                  <p className="font-medium text-white">
+                                    {getDayLabel(availability.dayOfWeek)}
+                                  </p>
+                                  <p className="text-sm text-slate-400">
+                                    {formatTime(availability.startTime)} - {formatTime(availability.endTime)}
+                                  </p>
+                                </div>
+                              </div>
+                              <button
+                                type="button"
+                                onClick={() => handleRemoveAvailability(availability.id)}
+                                className="p-2 text-slate-400 hover:text-red-400 transition-colors"
+                              >
+                                <span className="material-symbols-outlined">
+                                  delete
+                                </span>
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    <p className="text-muted-foreground text-xs italic mt-4">
+                      멘티가 신청할 수 있는 구체적인 요일과 시간대를 설정해 주세요.
+                    </p>
                   </div>
                 </section>
               </CardContent>

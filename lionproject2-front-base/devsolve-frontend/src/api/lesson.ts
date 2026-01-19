@@ -1,5 +1,6 @@
 import api from './client';
 import type { ApiResponse } from './client';
+import type { AvailableSlotsResponse } from '@/types';
 
 // 수업 상태
 export type LessonStatus = 'REQUESTED' | 'CONFIRMED' | 'REJECTED' | 'IN_PROGRESS' | 'COMPLETED';
@@ -7,6 +8,7 @@ export type LessonStatus = 'REQUESTED' | 'CONFIRMED' | 'REJECTED' | 'IN_PROGRESS
 // 수업 정보 타입 (백엔드 MyLessonItem 매핑)
 export interface Lesson {
   lessonId: number;
+  ticketId: number;
   tutorialId: number;
   tutorialTitle: string;
   mentorName?: string;
@@ -93,5 +95,19 @@ export const startLesson = async (lessonId: number): Promise<ApiResponse<Lesson>
  */
 export const completeLesson = async (lessonId: number): Promise<ApiResponse<Lesson>> => {
   const response = await api.put<ApiResponse<Lesson>>(`/api/lessons/${lessonId}/complete`);
+  return response.data;
+};
+
+/**
+ * 예약 가능 슬롯 조회 (공개)
+ * 특정 튜토리얼의 특정 날짜에 예약 가능한 시간 슬롯 조회
+ */
+export const getAvailableSlots = async (
+  tutorialId: number,
+  date: string  // "2026-01-20" (YYYY-MM-DD)
+): Promise<ApiResponse<AvailableSlotsResponse>> => {
+  const response = await api.get<ApiResponse<AvailableSlotsResponse>>(
+    `/api/tutorials/${tutorialId}/available-slots?date=${date}`
+  );
   return response.data;
 };

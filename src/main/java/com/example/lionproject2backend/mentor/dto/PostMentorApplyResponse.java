@@ -7,6 +7,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public class PostMentorApplyResponse {
 
+
     private Long mentorId;
     private String status;
 

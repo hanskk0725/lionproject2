@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import * as tutorialApi from '@/api/tutorial';
 import type { Tutorial } from '@/api/tutorial';
 
+// 배포시 주소 하드코딩
 const API_BASE_URL = 'http://localhost:8080';
 
 type PortOneConfig = {
@@ -18,7 +19,7 @@ export default function PaymentPage() {
   const [isTutorialLoading, setIsTutorialLoading] = useState(true);
   const [tutorialError, setTutorialError] = useState<string | null>(null);
 
-  const [paymentMethod, setPaymentMethod] = useState<'card' | 'transfer' | 'easy'>('card');
+  const [paymentMethod, setPaymentMethod] = useState<'card' | 'transfer'>('card');
   const [agreeTerms, setAgreeTerms] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [lessonCount, setLessonCount] = useState(4);
@@ -124,8 +125,6 @@ export default function PaymentPage() {
         return 'CARD';
       case 'transfer':
         return 'TRANSFER';
-      case 'easy':
-        return 'EASY_PAY';
       default:
         return 'CARD';
     }
@@ -193,7 +192,7 @@ export default function PaymentPage() {
         orderName: tutorial.title,
         totalAmount: paymentAmount,
         currency: 'CURRENCY_KRW',
-        payMethod: getPayMethod() as 'CARD' | 'TRANSFER' | 'EASY_PAY',
+        payMethod: getPayMethod() as 'CARD' | 'TRANSFER',
         customer: {
           fullName: '사용자',
           phoneNumber: '010-0000-0000',
@@ -334,7 +333,7 @@ export default function PaymentPage() {
                 <span className="material-symbols-outlined text-primary">credit_card</span>
                 결제 수단 선택
               </h2>
-              <div className="grid grid-cols-3 gap-4">
+              <div className="grid grid-cols-2 gap-4">
                 <button
                   onClick={() => setPaymentMethod('card')}
                   className={`flex flex-col items-center justify-center p-6 rounded-xl border-2 transition-all ${
@@ -357,18 +356,6 @@ export default function PaymentPage() {
                 >
                   <span className="material-symbols-outlined text-3xl text-slate-600 dark:text-slate-300 mb-2">account_balance</span>
                   <span className="text-sm font-medium text-slate-900 dark:text-white">계좌이체</span>
-                </button>
-
-                <button
-                  onClick={() => setPaymentMethod('easy')}
-                  className={`flex flex-col items-center justify-center p-6 rounded-xl border-2 transition-all ${
-                    paymentMethod === 'easy'
-                      ? 'border-primary bg-primary/5'
-                      : 'border-slate-200 dark:border-slate-700 hover:border-primary/50'
-                  }`}
-                >
-                  <span className="material-symbols-outlined text-3xl text-slate-600 dark:text-slate-300 mb-2">contactless</span>
-                  <span className="text-sm font-medium text-slate-900 dark:text-white">간편결제</span>
                 </button>
               </div>
             </div>

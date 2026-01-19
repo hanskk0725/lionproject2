@@ -71,10 +71,12 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET,
                                 "/api/mentors",
                                 "/api/mentors/*",
+                                "/api/mentors/*/availability",
                                 "/api/tutorials",
                                 "/api/tutorials/*",
                                 "/api/tutorials/search",
                                 "/api/tutorials/*/calendar",
+                                "/api/tutorials/*/available-slots",
                                 "/api/mentors/*/reviews",
                                 "/api/tutorials/*/reviews",
                                 "/api/auth/check-email",
@@ -113,7 +115,8 @@ public class SecurityConfig {
         config.setAllowedOriginPatterns(List.of(
                 "http://localhost:3000",
                 "http://localhost:5173",
-                "http://localhost:5174"
+                "http://localhost:5174",
+                "http://localhost:5175"
         ));
         config.setAllowedMethods(List.of("GET","POST","PUT","PATCH","DELETE","OPTIONS"));
         config.setAllowedHeaders(List.of(
