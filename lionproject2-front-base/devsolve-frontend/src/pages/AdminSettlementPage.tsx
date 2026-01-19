@@ -150,10 +150,8 @@ export default function AdminSettlementPage() {
         alert(res.message || '정산 생성 Job이 시작되었습니다.');
         setShowCreateModal(false);
         setCreatePeriod('');
-        // 정산 생성 후 목록 새로고침
-        setTimeout(() => {
-          fetchSettlements();
-        }, 2000); // Job이 시작된 후 잠시 대기 후 새로고침
+        // 정산 생성 후 즉시 목록 조회
+        await fetchSettlements();
       } else {
         alert(res.message || '정산 생성에 실패했습니다.');
       }
@@ -364,7 +362,7 @@ export default function AdminSettlementPage() {
                                 <div className="flex items-center justify-between">
                                   <span>환불 차감:</span>
                                   <span className="font-medium text-orange-500">
-                                    - ₩{settlement.refundAmount.toLocaleString()}
+                                    - ₩{(settlement.refundAmount ?? 0).toLocaleString()}
                                   </span>
                                 </div>
                               )}
@@ -451,7 +449,7 @@ export default function AdminSettlementPage() {
                       <div className="flex justify-between text-sm">
                         <span className="text-slate-600 dark:text-slate-400">환불 차감</span>
                         <span className="font-medium text-orange-500">
-                          - ₩{selectedSettlement.settlement.refundAmount.toLocaleString()}
+                          - ₩{(selectedSettlement.settlement.refundAmount ?? 0).toLocaleString()}
                         </span>
                       </div>
                     )}
