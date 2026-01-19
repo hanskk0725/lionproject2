@@ -87,7 +87,7 @@ export default function MentorDashboardPage() {
         ));
         alert('수업을 확정했습니다.');
       }
-    } catch (error) {
+    } catch {
       alert('수업 확정에 실패했습니다.');
     }
   };
@@ -108,7 +108,7 @@ export default function MentorDashboardPage() {
         ));
         alert('수업을 거절했습니다.');
       }
-    } catch (error) {
+    } catch {
       alert('수업 거절에 실패했습니다.');
     }
   };
@@ -122,7 +122,7 @@ export default function MentorDashboardPage() {
         ));
         alert('수업이 완료되었습니다.');
       }
-    } catch (error) {
+    } catch {
       alert('수업 완료 처리에 실패했습니다.');
     }
   };

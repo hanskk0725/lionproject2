@@ -125,32 +125,32 @@ VALUES
 -- =====================================================
 -- 5. Tutorials (튜토리얼/강의)
 -- =====================================================
-INSERT INTO tutorials (mentor_id, title, description, price, duration, rating, status, created_at,
+INSERT INTO tutorials (mentor_id, title, description, price, duration, tutorial_status, rating, status, created_at,
                        updated_at)
 VALUES (1, 'Spring Boot 기초부터 실전까지', 'Spring Boot를 처음 배우는 분들을 위한 기초 강의입니다. RESTful API 개발, JPA, Security 등을 다룹니다.',
-        50000, 60, 0.00, 'ACTIVE', NOW(), NOW()),
-       (1, 'Java 심화 프로그래밍', 'Java의 고급 기능들을 학습하는 강의입니다. 멀티스레딩, 제네릭, 람다 등을 다룹니다.', 60000, 90, 0.00, 'ACTIVE',
+        50000, 60, 'ACTIVE', 0.00, 'ACTIVE', NOW(), NOW()),
+       (1, 'Java 심화 프로그래밍', 'Java의 고급 기능들을 학습하는 강의입니다. 멀티스레딩, 제네릭, 람다 등을 다룹니다.', 60000, 90, 'ACTIVE', 0.00, 'ACTIVE',
         NOW(), NOW()),
-       (1, 'Spring Security 완벽 가이드', 'Spring Security를 활용한 인증/인가 시스템 구축 방법을 배웁니다.', 65000, 90, 0.00, 'ACTIVE',
+       (1, 'Spring Security 완벽 가이드', 'Spring Security를 활용한 인증/인가 시스템 구축 방법을 배웁니다.', 65000, 90, 'ACTIVE', 0.00, 'ACTIVE',
         NOW(), NOW()),
-       (2, 'React 완전 정복', 'React 기초부터 고급까지 전 과정을 다루는 강의입니다. Hooks, Context API, 상태관리 등을 학습합니다.', 70000, 90,
+       (2, 'React 완전 정복', 'React 기초부터 고급까지 전 과정을 다루는 강의입니다. Hooks, Context API, 상태관리 등을 학습합니다.', 70000, 90, 'ACTIVE',
         0.00, 'ACTIVE', NOW(), NOW()),
-       (2, 'JavaScript ES6+ 마스터', '모던 JavaScript의 모든 기능을 학습하는 강의입니다.', 40000, 60, 0.00, 'ACTIVE', NOW(),
+       (2, 'JavaScript ES6+ 마스터', '모던 JavaScript의 모든 기능을 학습하는 강의입니다.', 40000, 60, 'ACTIVE', 0.00, 'ACTIVE', NOW(),
         NOW()),
-       (2, 'React Native 모바일 앱 개발', 'React Native를 사용한 크로스 플랫폼 모바일 앱 개발 강의입니다.', 80000, 120, 0.00, 'ACTIVE',
+       (2, 'React Native 모바일 앱 개발', 'React Native를 사용한 크로스 플랫폼 모바일 앱 개발 강의입니다.', 80000, 120, 'ACTIVE', 0.00, 'ACTIVE',
         NOW(), NOW()),
-       (3, 'Python Django 웹 개발', 'Django를 활용한 풀스택 웹 개발 강의입니다.', 55000, 90, 0.00, 'ACTIVE', NOW(), NOW()),
-       (3, 'Node.js 백엔드 개발', 'Express를 활용한 RESTful API 개발 강의입니다.', 50000, 75, 0.00, 'ACTIVE', NOW(), NOW()),
-       (3, 'Python 데이터 분석 기초', 'Pandas와 NumPy를 활용한 데이터 분석 강의입니다.', 60000, 90, 0.00, 'ACTIVE', NOW(), NOW()),
-       (4, 'AWS 클라우드 기초', 'AWS의 핵심 서비스들을 실습하며 배우는 강의입니다.', 70000, 90, 0.00, 'ACTIVE', NOW(), NOW()),
-       (4, 'Docker 컨테이너 실전', 'Docker를 활용한 컨테이너화된 애플리케이션 개발과 배포를 학습합니다.', 55000, 75, 0.00, 'ACTIVE', NOW(),
+       (3, 'Python Django 웹 개발', 'Django를 활용한 풀스택 웹 개발 강의입니다.', 55000, 90, 'ACTIVE', 0.00, 'ACTIVE', NOW(), NOW()),
+       (3, 'Node.js 백엔드 개발', 'Express를 활용한 RESTful API 개발 강의입니다.', 50000, 75, 'ACTIVE', 0.00, 'ACTIVE', NOW(), NOW()),
+       (3, 'Python 데이터 분석 기초', 'Pandas와 NumPy를 활용한 데이터 분석 강의입니다.', 60000, 90, 'ACTIVE', 0.00, 'ACTIVE', NOW(), NOW()),
+       (4, 'AWS 클라우드 기초', 'AWS의 핵심 서비스들을 실습하며 배우는 강의입니다.', 70000, 90, 'ACTIVE', 0.00, 'ACTIVE', NOW(), NOW()),
+       (4, 'Docker 컨테이너 실전', 'Docker를 활용한 컨테이너화된 애플리케이션 개발과 배포를 학습합니다.', 55000, 75, 'ACTIVE', 0.00, 'ACTIVE', NOW(),
         NOW()),
-       (4, 'Kubernetes 오케스트레이션', 'Kubernetes를 사용한 컨테이너 오케스트레이션을 배웁니다.', 80000, 120, 0.00, 'ACTIVE', NOW(),
+       (4, 'Kubernetes 오케스트레이션', 'Kubernetes를 사용한 컨테이너 오케스트레이션을 배웁니다.', 80000, 120, 'ACTIVE', 0.00, 'ACTIVE', NOW(),
         NOW()),
-       (5, 'MySQL 데이터베이스 설계', 'MySQL을 활용한 데이터베이스 설계 및 최적화 강의입니다.', 50000, 90, 0.00, 'ACTIVE', NOW(), NOW()),
-       (5, 'MongoDB NoSQL 데이터베이스', 'MongoDB를 활용한 NoSQL 데이터베이스 설계 및 쿼리 작성 강의입니다.', 55000, 90, 0.00, 'ACTIVE',
+       (5, 'MySQL 데이터베이스 설계', 'MySQL을 활용한 데이터베이스 설계 및 최적화 강의입니다.', 50000, 90, 'ACTIVE', 0.00, 'ACTIVE', NOW(), NOW()),
+       (5, 'MongoDB NoSQL 데이터베이스', 'MongoDB를 활용한 NoSQL 데이터베이스 설계 및 쿼리 작성 강의입니다.', 55000, 90, 'ACTIVE', 0.00, 'ACTIVE',
         NOW(), NOW()),
-       (5, '데이터베이스 성능 최적화', '실무에서 사용하는 데이터베이스 성능 최적화 기법을 배웁니다.', 65000, 90, 0.00, 'ACTIVE', NOW(), NOW());
+       (5, '데이터베이스 성능 최적화', '실무에서 사용하는 데이터베이스 성능 최적화 기법을 배웁니다.', 65000, 90, 'ACTIVE', 0.00, 'ACTIVE', NOW(), NOW());
 
 -- =====================================================
 -- 6. Tutorial Skills (튜토리얼 스킬)
@@ -195,6 +195,7 @@ VALUES
 (15, 10, NOW(), NOW()), -- MySQL
 (15, 11, NOW(), NOW());
 -- MongoDB
+
 -- =====================================================
 -- 7. Payments (결제)
 -- =====================================================
@@ -285,6 +286,7 @@ VALUES (1, 1, 100000, 2, 'PAID', NOW(), DATE_SUB(NOW(), INTERVAL 45 DAY), DATE_S
        (11, 17, 55000, 1, 'PAID', NOW(), DATE_SUB(NOW(), INTERVAL 11 DAY), DATE_SUB(NOW(), INTERVAL 11 DAY)),
        (13, 16, 50000, 1, 'PAID', NOW(), DATE_SUB(NOW(), INTERVAL 9 DAY), DATE_SUB(NOW(), INTERVAL 9 DAY)),
        (14, 15, 55000, 1, 'PAID', NOW(), DATE_SUB(NOW(), INTERVAL 7 DAY), DATE_SUB(NOW(), INTERVAL 7 DAY));
+
 -- =====================================================
 -- 8. Tickets (이용권)
 -- =====================================================
@@ -454,175 +456,101 @@ VALUES (1, 1, 1, 2, 0, DATE_ADD(NOW(), INTERVAL 5 MONTH), DATE_SUB(NOW(), INTERV
 -- =====================================================
 -- 9. Lessons (수업)
 -- =====================================================
-INSERT INTO lessons (ticket_id, status, request_message, scheduled_at, completed_at, reject_reason, created_at,
-                     updated_at)
+-- 멘토 가용시간에 맞춘 고정 날짜 사용
+-- Mentor 1: 월/수/금 14:00-20:00 (Tutorial 1,2,3)
+-- Mentor 2: 화/목 10:00-18:00, 토 09:00-13:00 (Tutorial 4,5,6)
+-- Mentor 3: 평일 19:00-22:00 (Tutorial 7,8,9)
+-- Mentor 4: 월/수 18:00-21:00, 토 10:00-16:00 (Tutorial 10,11,12)
+-- Mentor 5: 화/목 19:00-22:00, 일 14:00-18:00 (Tutorial 13,14,15)
+INSERT INTO lessons (ticket_id, status, request_message, scheduled_at, completed_at, reject_reason, created_at, updated_at)
 VALUES
--- 완료된 수업 (리뷰 작성 가능한 수업들)
-(1, 'COMPLETED', 'Spring Boot 기초를 배우고 싶습니다.', DATE_SUB(NOW(), INTERVAL 43 DAY), DATE_SUB(NOW(), INTERVAL 43 DAY), NULL,
- DATE_SUB(NOW(), INTERVAL 45 DAY), DATE_SUB(NOW(), INTERVAL 43 DAY)),
-(2, 'COMPLETED', 'Spring Boot JPA에 대해 배우고 싶습니다.', DATE_SUB(NOW(), INTERVAL 38 DAY), DATE_SUB(NOW(), INTERVAL 38 DAY),
- NULL, DATE_SUB(NOW(), INTERVAL 40 DAY), DATE_SUB(NOW(), INTERVAL 38 DAY)),
-(3, 'COMPLETED', 'Java 심화 프로그래밍을 배우고 싶어요.', DATE_SUB(NOW(), INTERVAL 33 DAY), DATE_SUB(NOW(), INTERVAL 33 DAY), NULL,
- DATE_SUB(NOW(), INTERVAL 35 DAY), DATE_SUB(NOW(), INTERVAL 33 DAY)),
-(6, 'COMPLETED', 'React 컴포넌트 설계에 대해 배우고 싶어요.', DATE_SUB(NOW(), INTERVAL 40 DAY), DATE_SUB(NOW(), INTERVAL 40 DAY), NULL,
- DATE_SUB(NOW(), INTERVAL 42 DAY), DATE_SUB(NOW(), INTERVAL 40 DAY)),
-(7, 'COMPLETED', 'React Hooks를 배우고 싶습니다.', DATE_SUB(NOW(), INTERVAL 26 DAY), DATE_SUB(NOW(), INTERVAL 26 DAY), NULL,
- DATE_SUB(NOW(), INTERVAL 28 DAY), DATE_SUB(NOW(), INTERVAL 26 DAY)),
-(8, 'COMPLETED', 'React 상태관리에 대해 배우고 싶어요.', DATE_SUB(NOW(), INTERVAL 23 DAY), DATE_SUB(NOW(), INTERVAL 23 DAY), NULL,
- DATE_SUB(NOW(), INTERVAL 25 DAY), DATE_SUB(NOW(), INTERVAL 23 DAY)),
-(9, 'COMPLETED', 'JavaScript ES6 문법을 배우고 싶습니다.', DATE_SUB(NOW(), INTERVAL 18 DAY), DATE_SUB(NOW(), INTERVAL 18 DAY),
- NULL, DATE_SUB(NOW(), INTERVAL 20 DAY), DATE_SUB(NOW(), INTERVAL 18 DAY)),
-(12, 'COMPLETED', 'Django ORM에 대해 질문이 있습니다.', DATE_SUB(NOW(), INTERVAL 16 DAY), DATE_SUB(NOW(), INTERVAL 16 DAY), NULL,
- DATE_SUB(NOW(), INTERVAL 18 DAY), DATE_SUB(NOW(), INTERVAL 16 DAY)),
-(13, 'COMPLETED', 'Django 모델 설계를 배우고 싶어요.', DATE_SUB(NOW(), INTERVAL 13 DAY), DATE_SUB(NOW(), INTERVAL 13 DAY), NULL,
- DATE_SUB(NOW(), INTERVAL 15 DAY), DATE_SUB(NOW(), INTERVAL 13 DAY)),
-(14, 'COMPLETED', 'Node.js Express 라우팅을 배우고 싶습니다.', DATE_SUB(NOW(), INTERVAL 10 DAY), DATE_SUB(NOW(), INTERVAL 10 DAY),
- NULL, DATE_SUB(NOW(), INTERVAL 12 DAY), DATE_SUB(NOW(), INTERVAL 10 DAY)),
-(20, 'COMPLETED', 'React 기초부터 배우고 싶어요.', DATE_SUB(NOW(), INTERVAL 48 DAY), DATE_SUB(NOW(), INTERVAL 48 DAY), NULL,
- DATE_SUB(NOW(), INTERVAL 50 DAY), DATE_SUB(NOW(), INTERVAL 48 DAY)),
-(21, 'COMPLETED', 'React 컴포넌트 구조에 대해 배우고 싶습니다.', DATE_SUB(NOW(), INTERVAL 46 DAY), DATE_SUB(NOW(), INTERVAL 46 DAY),
- NULL, DATE_SUB(NOW(), INTERVAL 48 DAY), DATE_SUB(NOW(), INTERVAL 46 DAY)),
-(22, 'COMPLETED', 'React Context API를 배우고 싶어요.', DATE_SUB(NOW(), INTERVAL 44 DAY), DATE_SUB(NOW(), INTERVAL 44 DAY),
- NULL, DATE_SUB(NOW(), INTERVAL 46 DAY), DATE_SUB(NOW(), INTERVAL 44 DAY)),
-(23, 'COMPLETED', 'React Redux를 배우고 싶습니다.', DATE_SUB(NOW(), INTERVAL 42 DAY), DATE_SUB(NOW(), INTERVAL 42 DAY), NULL,
- DATE_SUB(NOW(), INTERVAL 44 DAY), DATE_SUB(NOW(), INTERVAL 42 DAY)),
-(24, 'COMPLETED', 'React 최적화 기법을 배우고 싶어요.', DATE_SUB(NOW(), INTERVAL 40 DAY), DATE_SUB(NOW(), INTERVAL 40 DAY), NULL,
- DATE_SUB(NOW(), INTERVAL 42 DAY), DATE_SUB(NOW(), INTERVAL 40 DAY)),
--- 확정된 수업
-(4, 'CONFIRMED', 'JPA를 활용한 데이터베이스 설계를 배우고 싶습니다.', DATE_ADD(NOW(), INTERVAL 3 DAY), NULL, NULL,
- DATE_SUB(NOW(), INTERVAL 38 DAY), DATE_SUB(NOW(), INTERVAL 38 DAY)),
-(15, 'CONFIRMED', 'Node.js 비동기 처리에 대해 배우고 싶어요.', DATE_ADD(NOW(), INTERVAL 5 DAY), NULL, NULL,
- DATE_SUB(NOW(), INTERVAL 8 DAY), DATE_SUB(NOW(), INTERVAL 8 DAY)),
--- 요청된 수업
-(16, 'REQUESTED', 'AWS EC2 인스턴스 설정을 배우고 싶습니다.', DATE_ADD(NOW(), INTERVAL 7 DAY), NULL, NULL,
- DATE_SUB(NOW(), INTERVAL 6 DAY), DATE_SUB(NOW(), INTERVAL 6 DAY)),
-(17, 'REQUESTED', 'Docker 컨테이너 실행 방법을 배우고 싶어요.', DATE_ADD(NOW(), INTERVAL 10 DAY), NULL, NULL,
- DATE_SUB(NOW(), INTERVAL 4 DAY), DATE_SUB(NOW(), INTERVAL 4 DAY)),
--- 예정된 수업
-(18, 'SCHEDULED', 'MySQL 쿼리 최적화를 배우고 싶습니다.', DATE_SUB(NOW(), INTERVAL 2 HOUR), NULL, NULL,
- DATE_SUB(NOW(), INTERVAL 3 DAY), DATE_SUB(NOW(), INTERVAL 2 HOUR)),
-(19, 'SCHEDULED', 'MongoDB 인덱싱에 대해 배우고 싶어요.', DATE_SUB(NOW(), INTERVAL 1 HOUR), NULL, NULL,
- DATE_SUB(NOW(), INTERVAL 2 DAY), DATE_SUB(NOW(), INTERVAL 1 HOUR)),
--- 거절된 수업
-(5, 'REJECTED', 'Java 고급 문법을 배우고 싶습니다.', DATE_ADD(NOW(), INTERVAL 1 DAY), NULL, '해당 시간대에는 일정이 맞지 않습니다. 다른 시간을 선택해주세요.',
- DATE_SUB(NOW(), INTERVAL 32 DAY), DATE_SUB(NOW(), INTERVAL 32 DAY)),
-(11, 'REJECTED', 'JavaScript 클로저에 대해 배우고 싶어요.', DATE_ADD(NOW(), INTERVAL 2 DAY), NULL, '이번 주는 모든 시간이 예약되어 있습니다.',
- DATE_SUB(NOW(), INTERVAL 22 DAY), DATE_SUB(NOW(), INTERVAL 22 DAY)),
--- 튜토리얼 1에 대한 추가 완료 수업 (리뷰 작성 가능)
-(25, 'COMPLETED', 'Spring Boot REST API를 배우고 싶습니다.', DATE_SUB(NOW(), INTERVAL 28 DAY), DATE_SUB(NOW(), INTERVAL 28 DAY),
- NULL, DATE_SUB(NOW(), INTERVAL 30 DAY), DATE_SUB(NOW(), INTERVAL 28 DAY)),
-(26, 'COMPLETED', 'Spring Boot 테스트 코드 작성법을 배우고 싶어요.', DATE_SUB(NOW(), INTERVAL 26 DAY),
- DATE_SUB(NOW(), INTERVAL 26 DAY), NULL, DATE_SUB(NOW(), INTERVAL 28 DAY), DATE_SUB(NOW(), INTERVAL 26 DAY)),
-(27, 'COMPLETED', 'Spring Boot 설정 파일 관리에 대해 배우고 싶습니다.', DATE_SUB(NOW(), INTERVAL 23 DAY),
- DATE_SUB(NOW(), INTERVAL 23 DAY), NULL, DATE_SUB(NOW(), INTERVAL 25 DAY), DATE_SUB(NOW(), INTERVAL 23 DAY)),
-(28, 'COMPLETED', 'Spring Boot Actuator 사용법을 배우고 싶어요.', DATE_SUB(NOW(), INTERVAL 20 DAY),
- DATE_SUB(NOW(), INTERVAL 20 DAY), NULL, DATE_SUB(NOW(), INTERVAL 22 DAY), DATE_SUB(NOW(), INTERVAL 20 DAY)),
-(29, 'COMPLETED', 'Spring Boot 로깅 설정에 대해 배우고 싶습니다.', DATE_SUB(NOW(), INTERVAL 18 DAY), DATE_SUB(NOW(), INTERVAL 18 DAY),
- NULL, DATE_SUB(NOW(), INTERVAL 20 DAY), DATE_SUB(NOW(), INTERVAL 18 DAY)),
-(30, 'COMPLETED', 'Spring Boot 프로파일 관리에 대해 배우고 싶어요.', DATE_SUB(NOW(), INTERVAL 13 DAY),
- DATE_SUB(NOW(), INTERVAL 13 DAY), NULL, DATE_SUB(NOW(), INTERVAL 18 DAY), DATE_SUB(NOW(), INTERVAL 13 DAY)),
-(31, 'COMPLETED', 'Spring Boot 인터셉터를 배우고 싶습니다.', DATE_SUB(NOW(), INTERVAL 10 DAY), DATE_SUB(NOW(), INTERVAL 10 DAY),
- NULL, DATE_SUB(NOW(), INTERVAL 12 DAY), DATE_SUB(NOW(), INTERVAL 10 DAY)),
-(32, 'COMPLETED', 'Spring Boot 예외 처리에 대해 배우고 싶어요.', DATE_SUB(NOW(), INTERVAL 8 DAY), DATE_SUB(NOW(), INTERVAL 8 DAY),
- NULL, DATE_SUB(NOW(), INTERVAL 10 DAY), DATE_SUB(NOW(), INTERVAL 8 DAY)),
-(33, 'COMPLETED', 'Spring Boot 트랜잭션 관리에 대해 배우고 싶습니다.', DATE_SUB(NOW(), INTERVAL 5 DAY), DATE_SUB(NOW(), INTERVAL 5 DAY),
- NULL, DATE_SUB(NOW(), INTERVAL 7 DAY), DATE_SUB(NOW(), INTERVAL 5 DAY)),
--- 튜토리얼 4에 대한 추가 완료 수업
-(34, 'COMPLETED', 'React 컴포넌트 라이프사이클에 대해 배우고 싶어요.', DATE_SUB(NOW(), INTERVAL 22 DAY), DATE_SUB(NOW(), INTERVAL 22 DAY),
- NULL, DATE_SUB(NOW(), INTERVAL 24 DAY), DATE_SUB(NOW(), INTERVAL 22 DAY)),
-(35, 'COMPLETED', 'React Props와 State 차이를 배우고 싶습니다.', DATE_SUB(NOW(), INTERVAL 19 DAY),
- DATE_SUB(NOW(), INTERVAL 19 DAY), NULL, DATE_SUB(NOW(), INTERVAL 21 DAY), DATE_SUB(NOW(), INTERVAL 19 DAY)),
-(36, 'COMPLETED', 'React 이벤트 핸들링을 배우고 싶어요.', DATE_SUB(NOW(), INTERVAL 17 DAY), DATE_SUB(NOW(), INTERVAL 17 DAY), NULL,
- DATE_SUB(NOW(), INTERVAL 19 DAY), DATE_SUB(NOW(), INTERVAL 17 DAY)),
-(37, 'COMPLETED', 'React 조건부 렌더링에 대해 배우고 싶습니다.', DATE_SUB(NOW(), INTERVAL 14 DAY), DATE_SUB(NOW(), INTERVAL 14 DAY),
- NULL, DATE_SUB(NOW(), INTERVAL 16 DAY), DATE_SUB(NOW(), INTERVAL 14 DAY)),
-(38, 'COMPLETED', 'React 리스트와 키에 대해 배우고 싶어요.', DATE_SUB(NOW(), INTERVAL 12 DAY), DATE_SUB(NOW(), INTERVAL 12 DAY), NULL,
- DATE_SUB(NOW(), INTERVAL 14 DAY), DATE_SUB(NOW(), INTERVAL 12 DAY)),
-(39, 'COMPLETED', 'React 폼 처리에 대해 배우고 싶습니다.', DATE_SUB(NOW(), INTERVAL 9 DAY), DATE_SUB(NOW(), INTERVAL 9 DAY), NULL,
- DATE_SUB(NOW(), INTERVAL 11 DAY), DATE_SUB(NOW(), INTERVAL 9 DAY)),
-(40, 'COMPLETED', 'React 라우팅에 대해 배우고 싶어요.', DATE_SUB(NOW(), INTERVAL 6 DAY), DATE_SUB(NOW(), INTERVAL 6 DAY), NULL,
- DATE_SUB(NOW(), INTERVAL 8 DAY), DATE_SUB(NOW(), INTERVAL 6 DAY)),
-(41, 'COMPLETED', 'React 성능 최적화 기법을 배우고 싶습니다.', DATE_SUB(NOW(), INTERVAL 3 DAY), DATE_SUB(NOW(), INTERVAL 3 DAY), NULL,
- DATE_SUB(NOW(), INTERVAL 5 DAY), DATE_SUB(NOW(), INTERVAL 3 DAY)),
--- 튜토리얼 3에 대한 추가 완료 수업
-(42, 'COMPLETED', 'React 컴포넌트 패턴에 대해 배우고 싶어요.', DATE_SUB(NOW(), INTERVAL 29 DAY), DATE_SUB(NOW(), INTERVAL 29 DAY),
- NULL, DATE_SUB(NOW(), INTERVAL 41 DAY), DATE_SUB(NOW(), INTERVAL 29 DAY)),
-(43, 'COMPLETED', 'React 고급 패턴을 배우고 싶습니다.', DATE_SUB(NOW(), INTERVAL 27 DAY), DATE_SUB(NOW(), INTERVAL 27 DAY), NULL,
- DATE_SUB(NOW(), INTERVAL 39 DAY), DATE_SUB(NOW(), INTERVAL 27 DAY)),
-(44, 'COMPLETED', 'React 테스팅에 대해 배우고 싶어요.', DATE_SUB(NOW(), INTERVAL 25 DAY), DATE_SUB(NOW(), INTERVAL 25 DAY), NULL,
- DATE_SUB(NOW(), INTERVAL 37 DAY), DATE_SUB(NOW(), INTERVAL 25 DAY)),
-(45, 'COMPLETED', 'React 타입스크립트 사용법을 배우고 싶습니다.', DATE_SUB(NOW(), INTERVAL 23 DAY), DATE_SUB(NOW(), INTERVAL 23 DAY),
- NULL, DATE_SUB(NOW(), INTERVAL 35 DAY), DATE_SUB(NOW(), INTERVAL 23 DAY)),
-(46, 'COMPLETED', 'React 빌드와 배포에 대해 배우고 싶어요.', DATE_SUB(NOW(), INTERVAL 21 DAY), DATE_SUB(NOW(), INTERVAL 21 DAY), NULL,
- DATE_SUB(NOW(), INTERVAL 33 DAY), DATE_SUB(NOW(), INTERVAL 21 DAY)),
-(47, 'COMPLETED', 'React SSR에 대해 배우고 싶습니다.', DATE_SUB(NOW(), INTERVAL 19 DAY), DATE_SUB(NOW(), INTERVAL 19 DAY), NULL,
- DATE_SUB(NOW(), INTERVAL 31 DAY), DATE_SUB(NOW(), INTERVAL 19 DAY)),
-(48, 'COMPLETED', 'React 마이크로프론트엔드에 대해 배우고 싶어요.', DATE_SUB(NOW(), INTERVAL 17 DAY), DATE_SUB(NOW(), INTERVAL 17 DAY),
- NULL, DATE_SUB(NOW(), INTERVAL 29 DAY), DATE_SUB(NOW(), INTERVAL 17 DAY)),
-(49, 'COMPLETED', 'React 프로젝트 구조에 대해 배우고 싶습니다.', DATE_SUB(NOW(), INTERVAL 15 DAY), DATE_SUB(NOW(), INTERVAL 15 DAY),
- NULL, DATE_SUB(NOW(), INTERVAL 27 DAY), DATE_SUB(NOW(), INTERVAL 15 DAY)),
--- 상태별 필터링 테스트를 위한 다양한 상태의 수업 추가
--- CONFIRMED 상태 (확정된 수업)
-(58, 'CONFIRMED', 'Spring Boot 기초 강의를 신청합니다.', DATE_ADD(NOW(), INTERVAL 4 DAY), NULL, NULL,
- DATE_SUB(NOW(), INTERVAL 20 DAY), DATE_SUB(NOW(), INTERVAL 18 DAY)),
-(59, 'CONFIRMED', 'Java 심화 프로그래밍 강의를 신청합니다.', DATE_ADD(NOW(), INTERVAL 6 DAY), NULL, NULL,
- DATE_SUB(NOW(), INTERVAL 18 DAY), DATE_SUB(NOW(), INTERVAL 16 DAY)),
-(60, 'CONFIRMED', 'React 컴포넌트 설계 강의를 신청합니다.', DATE_ADD(NOW(), INTERVAL 8 DAY), NULL, NULL,
- DATE_SUB(NOW(), INTERVAL 16 DAY), DATE_SUB(NOW(), INTERVAL 14 DAY)),
-(61, 'CONFIRMED', 'React 상태관리 강의를 신청합니다.', DATE_ADD(NOW(), INTERVAL 10 DAY), NULL, NULL,
- DATE_SUB(NOW(), INTERVAL 14 DAY), DATE_SUB(NOW(), INTERVAL 12 DAY)),
-(62, 'CONFIRMED', 'Django ORM 강의를 신청합니다.', DATE_ADD(NOW(), INTERVAL 12 DAY), NULL, NULL,
- DATE_SUB(NOW(), INTERVAL 12 DAY), DATE_SUB(NOW(), INTERVAL 10 DAY)),
-(63, 'CONFIRMED', 'Docker 컨테이너 강의를 신청합니다.', DATE_ADD(NOW(), INTERVAL 14 DAY), NULL, NULL,
- DATE_SUB(NOW(), INTERVAL 10 DAY), DATE_SUB(NOW(), INTERVAL 8 DAY)),
-(64, 'CONFIRMED', 'MySQL 데이터베이스 강의를 신청합니다.', DATE_ADD(NOW(), INTERVAL 16 DAY), NULL, NULL,
- DATE_SUB(NOW(), INTERVAL 8 DAY), DATE_SUB(NOW(), INTERVAL 6 DAY)),
-(65, 'CONFIRMED', 'MongoDB NoSQL 강의를 신청합니다.', DATE_ADD(NOW(), INTERVAL 18 DAY), NULL, NULL,
- DATE_SUB(NOW(), INTERVAL 6 DAY), DATE_SUB(NOW(), INTERVAL 4 DAY)),
--- REQUESTED 상태 (요청된 수업)
-(66, 'REQUESTED', 'Spring Boot JPA 강의를 신청합니다.', DATE_ADD(NOW(), INTERVAL 20 DAY), NULL, NULL,
- DATE_SUB(NOW(), INTERVAL 4 DAY), DATE_SUB(NOW(), INTERVAL 4 DAY)),
-(67, 'REQUESTED', 'React Hooks 강의를 신청합니다.', DATE_ADD(NOW(), INTERVAL 22 DAY), NULL, NULL,
- DATE_SUB(NOW(), INTERVAL 3 DAY), DATE_SUB(NOW(), INTERVAL 3 DAY)),
-(68, 'REQUESTED', 'JavaScript ES6 강의를 신청합니다.', DATE_ADD(NOW(), INTERVAL 24 DAY), NULL, NULL,
- DATE_SUB(NOW(), INTERVAL 2 DAY), DATE_SUB(NOW(), INTERVAL 2 DAY)),
-(69, 'REQUESTED', 'Node.js Express 강의를 신청합니다.', DATE_ADD(NOW(), INTERVAL 26 DAY), NULL, NULL,
- DATE_SUB(NOW(), INTERVAL 25 DAY), DATE_SUB(NOW(), INTERVAL 25 DAY)),
-(70, 'REQUESTED', 'Python Django 강의를 신청합니다.', DATE_ADD(NOW(), INTERVAL 28 DAY), NULL, NULL,
- DATE_SUB(NOW(), INTERVAL 23 DAY), DATE_SUB(NOW(), INTERVAL 23 DAY)),
-(71, 'REQUESTED', 'AWS 클라우드 강의를 신청합니다.', DATE_ADD(NOW(), INTERVAL 30 DAY), NULL, NULL, DATE_SUB(NOW(), INTERVAL 21 DAY),
- DATE_SUB(NOW(), INTERVAL 21 DAY)),
-(72, 'REQUESTED', 'Kubernetes 오케스트레이션 강의를 신청합니다.', DATE_ADD(NOW(), INTERVAL 32 DAY), NULL, NULL,
- DATE_SUB(NOW(), INTERVAL 19 DAY), DATE_SUB(NOW(), INTERVAL 19 DAY)),
-(73, 'REQUESTED', '데이터베이스 성능 최적화 강의를 신청합니다.', DATE_ADD(NOW(), INTERVAL 34 DAY), NULL, NULL,
- DATE_SUB(NOW(), INTERVAL 17 DAY), DATE_SUB(NOW(), INTERVAL 17 DAY)),
-(74, 'REQUESTED', 'React Native 강의를 신청합니다.', DATE_ADD(NOW(), INTERVAL 36 DAY), NULL, NULL,
- DATE_SUB(NOW(), INTERVAL 15 DAY), DATE_SUB(NOW(), INTERVAL 15 DAY)),
-(75, 'REQUESTED', 'Spring Security 강의를 신청합니다.', DATE_ADD(NOW(), INTERVAL 38 DAY), NULL, NULL,
- DATE_SUB(NOW(), INTERVAL 13 DAY), DATE_SUB(NOW(), INTERVAL 13 DAY)),
--- SCHEDULED 상태 (예정된 수업)
-(76, 'SCHEDULED', 'Java 고급 문법 강의를 배우고 있습니다.', DATE_SUB(NOW(), INTERVAL 3 HOUR), NULL, NULL,
- DATE_SUB(NOW(), INTERVAL 2 DAY), DATE_SUB(NOW(), INTERVAL 3 HOUR)),
-(77, 'SCHEDULED', 'React 컴포넌트 최적화 강의를 배우고 있습니다.', DATE_SUB(NOW(), INTERVAL 2 HOUR), NULL, NULL,
- DATE_SUB(NOW(), INTERVAL 1 DAY), DATE_SUB(NOW(), INTERVAL 2 HOUR)),
--- REJECTED 상태 (거절된 수업)
-(68, 'REJECTED', 'JavaScript ES6 강의를 신청합니다.', DATE_ADD(NOW(), INTERVAL 1 DAY), NULL, '해당 시간대는 일정이 맞지 않습니다.',
- DATE_SUB(NOW(), INTERVAL 7 DAY), DATE_SUB(NOW(), INTERVAL 6 DAY)),
-(69, 'REJECTED', 'Node.js Express 강의를 신청합니다.', DATE_ADD(NOW(), INTERVAL 2 DAY), NULL, '이번 주는 모든 시간이 예약되어 있습니다.',
- DATE_SUB(NOW(), INTERVAL 8 DAY), DATE_SUB(NOW(), INTERVAL 7 DAY)),
-(70, 'REJECTED', 'Python Django 강의를 신청합니다.', DATE_ADD(NOW(), INTERVAL 3 DAY), NULL, '요청하신 시간에 다른 수업이 예약되어 있습니다.',
- DATE_SUB(NOW(), INTERVAL 9 DAY), DATE_SUB(NOW(), INTERVAL 8 DAY)),
-(71, 'REJECTED', 'AWS 클라우드 강의를 신청합니다.', DATE_ADD(NOW(), INTERVAL 4 DAY), NULL, '개인 사정으로 해당 시간에 수업이 어렵습니다.',
- DATE_SUB(NOW(), INTERVAL 10 DAY), DATE_SUB(NOW(), INTERVAL 9 DAY)),
-(72, 'REJECTED', 'Kubernetes 오케스트레이션 강의를 신청합니다.', DATE_ADD(NOW(), INTERVAL 5 DAY), NULL, '요청하신 시간대는 이용할 수 없습니다.',
- DATE_SUB(NOW(), INTERVAL 11 DAY), DATE_SUB(NOW(), INTERVAL 10 DAY)),
--- CANCELLED 상태 (취소된 수업)
-(61, 'CANCELLED', 'React 상태관리 강의를 신청했습니다.', DATE_ADD(NOW(), INTERVAL 1 DAY), NULL, NULL,
- DATE_SUB(NOW(), INTERVAL 14 DAY), DATE_SUB(NOW(), INTERVAL 12 DAY)),
-(62, 'CANCELLED', 'Django ORM 강의를 신청했습니다.', DATE_ADD(NOW(), INTERVAL 2 DAY), NULL, NULL,
- DATE_SUB(NOW(), INTERVAL 13 DAY), DATE_SUB(NOW(), INTERVAL 11 DAY)),
-(63, 'CANCELLED', 'Docker 컨테이너 강의를 신청했습니다.', DATE_ADD(NOW(), INTERVAL 3 DAY), NULL, NULL,
- DATE_SUB(NOW(), INTERVAL 12 DAY), DATE_SUB(NOW(), INTERVAL 10 DAY));
+-- 완료된 수업 - Mentor 1 (Tutorial 1: 월/수/금 14:00-20:00)
+(1, 'COMPLETED', 'Spring Boot 기초를 배우고 싶습니다.', '2025-12-01 15:00:00', '2025-12-01 16:00:00', NULL, '2025-11-28 10:00:00', '2025-12-01 16:00:00'),
+(2, 'COMPLETED', 'Spring Boot JPA에 대해 배우고 싶습니다.', '2025-12-03 16:00:00', '2025-12-03 17:00:00', NULL, '2025-12-01 10:00:00', '2025-12-03 17:00:00'),
+(3, 'COMPLETED', 'Java 심화 프로그래밍을 배우고 싶어요.', '2025-12-05 14:00:00', '2025-12-05 15:00:00', NULL, '2025-12-03 10:00:00', '2025-12-05 15:00:00'),
+-- 완료된 수업 - Mentor 2 (Tutorial 4: 화/목 10:00-18:00)
+(6, 'COMPLETED', 'React 컴포넌트 설계에 대해 배우고 싶어요.', '2025-12-02 11:00:00', '2025-12-02 12:30:00', NULL, '2025-11-29 10:00:00', '2025-12-02 12:30:00'),
+(7, 'COMPLETED', 'React Hooks를 배우고 싶습니다.', '2025-12-04 14:00:00', '2025-12-04 15:30:00', NULL, '2025-12-02 10:00:00', '2025-12-04 15:30:00'),
+(8, 'COMPLETED', 'React 상태관리에 대해 배우고 싶어요.', '2025-12-06 10:00:00', '2025-12-06 11:00:00', NULL, '2025-12-04 10:00:00', '2025-12-06 11:00:00'),
+(9, 'COMPLETED', 'JavaScript ES6 문법을 배우고 싶습니다.', '2025-12-09 11:00:00', '2025-12-09 12:00:00', NULL, '2025-12-06 10:00:00', '2025-12-09 12:00:00'),
+-- 완료된 수업 - Mentor 3 (Tutorial 7,8: 평일 19:00-22:00)
+(12, 'COMPLETED', 'Django ORM에 대해 질문이 있습니다.', '2025-12-01 19:00:00', '2025-12-01 20:30:00', NULL, '2025-11-28 10:00:00', '2025-12-01 20:30:00'),
+(13, 'COMPLETED', 'Django 모델 설계를 배우고 싶어요.', '2025-12-03 20:00:00', '2025-12-03 21:30:00', NULL, '2025-12-01 10:00:00', '2025-12-03 21:30:00'),
+(14, 'COMPLETED', 'Node.js Express 라우팅을 배우고 싶습니다.', '2025-12-05 19:00:00', '2025-12-05 20:15:00', NULL, '2025-12-03 10:00:00', '2025-12-05 20:15:00'),
+-- 완료된 수업 - Mentor 1 (Tutorial 3: 월/수/금 14:00-20:00)
+(20, 'COMPLETED', 'React 기초부터 배우고 싶어요.', '2025-11-17 15:00:00', '2025-11-17 16:30:00', NULL, '2025-11-14 10:00:00', '2025-11-17 16:30:00'),
+(21, 'COMPLETED', 'React 컴포넌트 구조에 대해 배우고 싶습니다.', '2025-11-19 16:00:00', '2025-11-19 17:30:00', NULL, '2025-11-17 10:00:00', '2025-11-19 17:30:00'),
+(22, 'COMPLETED', 'React Context API를 배우고 싶어요.', '2025-11-21 14:00:00', '2025-11-21 15:30:00', NULL, '2025-11-19 10:00:00', '2025-11-21 15:30:00'),
+(23, 'COMPLETED', 'React Redux를 배우고 싶습니다.', '2025-11-24 15:00:00', '2025-11-24 16:30:00', NULL, '2025-11-21 10:00:00', '2025-11-24 16:30:00'),
+(24, 'COMPLETED', 'React 최적화 기법을 배우고 싶어요.', '2025-11-26 17:00:00', '2025-11-26 18:30:00', NULL, '2025-11-24 10:00:00', '2025-11-26 18:30:00'),
+-- 확정된 수업 - Mentor 1 (Tutorial 2: 월/수/금 14:00-20:00)
+(4, 'CONFIRMED', 'JPA를 활용한 데이터베이스 설계를 배우고 싶습니다.', '2026-01-19 15:00:00', NULL, NULL, '2026-01-10 10:00:00', '2026-01-15 10:00:00'),
+-- 확정된 수업 - Mentor 3 (Tutorial 8: 평일 19:00-22:00)
+(15, 'CONFIRMED', 'Node.js 비동기 처리에 대해 배우고 싶어요.', '2026-01-20 19:00:00', NULL, NULL, '2026-01-10 10:00:00', '2026-01-15 10:00:00'),
+-- 요청된 수업 - Mentor 4 (Tutorial 10: 월/수 18:00-21:00)
+(16, 'REQUESTED', 'AWS EC2 인스턴스 설정을 배우고 싶습니다.', '2026-01-20 18:00:00', NULL, NULL, '2026-01-10 10:00:00', '2026-01-10 10:00:00'),
+-- 요청된 수업 - Mentor 4 (Tutorial 11: 월/수 18:00-21:00, 토 10:00-16:00)
+(17, 'REQUESTED', 'Docker 컨테이너 실행 방법을 배우고 싶어요.', '2026-01-25 10:00:00', NULL, NULL, '2026-01-12 10:00:00', '2026-01-12 10:00:00'),
+-- 예정된 수업 - Mentor 5 (Tutorial 13: 화/목 19:00-22:00)
+(18, 'SCHEDULED', 'MySQL 쿼리 최적화를 배우고 싶습니다.', '2026-01-21 19:00:00', NULL, NULL, '2026-01-14 10:00:00', '2026-01-17 10:00:00'),
+-- 예정된 수업 - Mentor 5 (Tutorial 14: 화/목 19:00-22:00)
+(19, 'SCHEDULED', 'MongoDB 인덱싱에 대해 배우고 싶어요.', '2026-01-23 20:00:00', NULL, NULL, '2026-01-15 10:00:00', '2026-01-17 10:00:00'),
+-- 거절된 수업 - Mentor 1 (Tutorial 2: 원래 요청 시간이 가용시간 외였음)
+(5, 'REJECTED', 'Java 고급 문법을 배우고 싶습니다.', '2026-01-21 10:00:00', NULL, '해당 시간대에는 일정이 맞지 않습니다. 다른 시간을 선택해주세요.', '2026-01-10 10:00:00', '2026-01-11 10:00:00'),
+-- 거절된 수업 - Mentor 2 (Tutorial 5)
+(11, 'REJECTED', 'JavaScript 클로저에 대해 배우고 싶어요.', '2026-01-20 10:00:00', NULL, '이번 주는 모든 시간이 예약되어 있습니다.', '2026-01-08 10:00:00', '2026-01-09 10:00:00'),
+-- 튜토리얼 1에 대한 추가 완료 수업 - Mentor 1 (월/수/금 14:00-20:00)
+(25, 'COMPLETED', 'Spring Boot REST API를 배우고 싶습니다.', '2025-12-08 15:00:00', '2025-12-08 16:00:00', NULL, '2025-12-05 10:00:00', '2025-12-08 16:00:00'),
+(26, 'COMPLETED', 'Spring Boot 테스트 코드 작성법을 배우고 싶어요.', '2025-12-10 16:00:00', '2025-12-10 17:00:00', NULL, '2025-12-08 10:00:00', '2025-12-10 17:00:00'),
+(27, 'COMPLETED', 'Spring Boot 설정 파일 관리에 대해 배우고 싶습니다.', '2025-12-12 14:00:00', '2025-12-12 15:00:00', NULL, '2025-12-10 10:00:00', '2025-12-12 15:00:00'),
+(28, 'COMPLETED', 'Spring Boot Actuator 사용법을 배우고 싶어요.', '2025-12-15 17:00:00', '2025-12-15 18:00:00', NULL, '2025-12-12 10:00:00', '2025-12-15 18:00:00'),
+(29, 'COMPLETED', 'Spring Boot 로깅 설정에 대해 배우고 싶습니다.', '2025-12-17 15:00:00', '2025-12-17 16:00:00', NULL, '2025-12-15 10:00:00', '2025-12-17 16:00:00'),
+(30, 'COMPLETED', 'Spring Boot 프로파일 관리에 대해 배우고 싶어요.', '2025-12-19 16:00:00', '2025-12-19 17:00:00', NULL, '2025-12-17 10:00:00', '2025-12-19 17:00:00'),
+(31, 'COMPLETED', 'Spring Boot 인터셉터를 배우고 싶습니다.', '2025-12-22 14:00:00', '2025-12-22 15:00:00', NULL, '2025-12-19 10:00:00', '2025-12-22 15:00:00'),
+(32, 'COMPLETED', 'Spring Boot 예외 처리에 대해 배우고 싶어요.', '2025-12-24 15:00:00', '2025-12-24 16:00:00', NULL, '2025-12-22 10:00:00', '2025-12-24 16:00:00'),
+(33, 'COMPLETED', 'Spring Boot 트랜잭션 관리에 대해 배우고 싶습니다.', '2025-12-26 17:00:00', '2025-12-26 18:00:00', NULL, '2025-12-24 10:00:00', '2025-12-26 18:00:00'),
+-- 튜토리얼 4에 대한 추가 완료 수업 - Mentor 2 (화/목 10:00-18:00, 토 09:00-13:00)
+(34, 'COMPLETED', 'React 컴포넌트 라이프사이클에 대해 배우고 싶어요.', '2025-12-11 11:00:00', '2025-12-11 12:30:00', NULL, '2025-12-09 10:00:00', '2025-12-11 12:30:00'),
+(35, 'COMPLETED', 'React Props와 State 차이를 배우고 싶습니다.', '2025-12-13 10:00:00', '2025-12-13 11:00:00', NULL, '2025-12-11 10:00:00', '2025-12-13 11:00:00'),
+(36, 'COMPLETED', 'React 이벤트 핸들링을 배우고 싶어요.', '2025-12-16 14:00:00', '2025-12-16 15:30:00', NULL, '2025-12-13 10:00:00', '2025-12-16 15:30:00'),
+(37, 'COMPLETED', 'React 조건부 렌더링에 대해 배우고 싶습니다.', '2025-12-18 11:00:00', '2025-12-18 12:30:00', NULL, '2025-12-16 10:00:00', '2025-12-18 12:30:00'),
+(38, 'COMPLETED', 'React 리스트와 키에 대해 배우고 싶어요.', '2025-12-20 10:00:00', '2025-12-20 11:00:00', NULL, '2025-12-18 10:00:00', '2025-12-20 11:00:00'),
+(39, 'COMPLETED', 'React 폼 처리에 대해 배우고 싶습니다.', '2025-12-23 14:00:00', '2025-12-23 15:30:00', NULL, '2025-12-20 10:00:00', '2025-12-23 15:30:00'),
+(40, 'COMPLETED', 'React 라우팅에 대해 배우고 싶어요.', '2025-12-25 11:00:00', '2025-12-25 12:30:00', NULL, '2025-12-23 10:00:00', '2025-12-25 12:30:00'),
+(41, 'COMPLETED', 'React 성능 최적화 기법을 배우고 싶습니다.', '2025-12-27 10:00:00', '2025-12-27 11:00:00', NULL, '2025-12-25 10:00:00', '2025-12-27 11:00:00'),
+-- 튜토리얼 3에 대한 추가 완료 수업 - Mentor 1 (월/수/금 14:00-20:00)
+(42, 'COMPLETED', 'React 컴포넌트 패턴에 대해 배우고 싶어요.', '2025-11-28 14:00:00', '2025-11-28 15:30:00', NULL, '2025-11-26 10:00:00', '2025-11-28 15:30:00'),
+(43, 'COMPLETED', 'React 고급 패턴을 배우고 싶습니다.', '2025-12-01 17:00:00', '2025-12-01 18:30:00', NULL, '2025-11-28 10:00:00', '2025-12-01 18:30:00'),
+(44, 'COMPLETED', 'React 테스팅에 대해 배우고 싶어요.', '2025-12-03 14:00:00', '2025-12-03 15:30:00', NULL, '2025-12-01 10:00:00', '2025-12-03 15:30:00'),
+(45, 'COMPLETED', 'React 타입스크립트 사용법을 배우고 싶습니다.', '2025-12-05 16:00:00', '2025-12-05 17:30:00', NULL, '2025-12-03 10:00:00', '2025-12-05 17:30:00'),
+(46, 'COMPLETED', 'React 빌드와 배포에 대해 배우고 싶어요.', '2025-12-08 17:00:00', '2025-12-08 18:30:00', NULL, '2025-12-05 10:00:00', '2025-12-08 18:30:00'),
+(47, 'COMPLETED', 'React SSR에 대해 배우고 싶습니다.', '2025-12-10 14:00:00', '2025-12-10 15:30:00', NULL, '2025-12-08 10:00:00', '2025-12-10 15:30:00'),
+(48, 'COMPLETED', 'React 마이크로프론트엔드에 대해 배우고 싶어요.', '2025-12-12 16:00:00', '2025-12-12 17:30:00', NULL, '2025-12-10 10:00:00', '2025-12-12 17:30:00'),
+(49, 'COMPLETED', 'React 프로젝트 구조에 대해 배우고 싶습니다.', '2025-12-15 15:00:00', '2025-12-15 16:30:00', NULL, '2025-12-12 10:00:00', '2025-12-15 16:30:00'),
+-- CONFIRMED 상태 - 다양한 멘토
+(58, 'CONFIRMED', 'Spring Boot 기초 강의를 신청합니다.', '2026-01-21 15:00:00', NULL, NULL, '2026-01-10 10:00:00', '2026-01-15 10:00:00'),
+(59, 'CONFIRMED', 'Java 심화 프로그래밍 강의를 신청합니다.', '2026-01-23 16:00:00', NULL, NULL, '2026-01-11 10:00:00', '2026-01-16 10:00:00'),
+(60, 'CONFIRMED', 'React 컴포넌트 설계 강의를 신청합니다.', '2026-01-22 11:00:00', NULL, NULL, '2026-01-12 10:00:00', '2026-01-17 10:00:00'),
+(61, 'CONFIRMED', 'React 상태관리 강의를 신청합니다.', '2026-01-24 14:00:00', NULL, NULL, '2026-01-13 10:00:00', '2026-01-18 10:00:00'),
+(62, 'CONFIRMED', 'Django ORM 강의를 신청합니다.', '2026-01-22 19:00:00', NULL, NULL, '2026-01-14 10:00:00', '2026-01-19 10:00:00'),
+(63, 'CONFIRMED', 'Docker 컨테이너 강의를 신청합니다.', '2026-01-22 18:00:00', NULL, NULL, '2026-01-15 10:00:00', '2026-01-20 10:00:00'),
+(64, 'CONFIRMED', 'MySQL 데이터베이스 강의를 신청합니다.', '2026-01-23 19:00:00', NULL, NULL, '2026-01-16 10:00:00', '2026-01-21 10:00:00'),
+(65, 'CONFIRMED', 'MongoDB NoSQL 강의를 신청합니다.', '2026-01-26 14:00:00', NULL, NULL, '2026-01-17 10:00:00', '2026-01-22 10:00:00'),
+-- REQUESTED 상태 - 다양한 멘토 가용시간에 맞춤
+(66, 'REQUESTED', 'Spring Boot JPA 강의를 신청합니다.', '2026-02-02 15:00:00', NULL, NULL, '2026-01-20 10:00:00', '2026-01-20 10:00:00'),
+(67, 'REQUESTED', 'React Hooks 강의를 신청합니다.', '2026-02-03 11:00:00', NULL, NULL, '2026-01-21 10:00:00', '2026-01-21 10:00:00'),
+(68, 'REQUESTED', 'JavaScript ES6 강의를 신청합니다.', '2026-02-05 14:00:00', NULL, NULL, '2026-01-22 10:00:00', '2026-01-22 10:00:00'),
+(69, 'REQUESTED', 'Node.js Express 강의를 신청합니다.', '2026-02-05 19:00:00', NULL, NULL, '2026-01-23 10:00:00', '2026-01-23 10:00:00'),
+(70, 'REQUESTED', 'Python Django 강의를 신청합니다.', '2026-02-06 20:00:00', NULL, NULL, '2026-01-24 10:00:00', '2026-01-24 10:00:00'),
+(71, 'REQUESTED', 'AWS 클라우드 강의를 신청합니다.', '2026-02-07 10:00:00', NULL, NULL, '2026-01-25 10:00:00', '2026-01-25 10:00:00'),
+(72, 'REQUESTED', 'Kubernetes 오케스트레이션 강의를 신청합니다.', '2026-02-09 18:00:00', NULL, NULL, '2026-01-26 10:00:00', '2026-01-26 10:00:00'),
+(73, 'REQUESTED', '데이터베이스 성능 최적화 강의를 신청합니다.', '2026-02-10 19:00:00', NULL, NULL, '2026-01-27 10:00:00', '2026-01-27 10:00:00'),
+(74, 'REQUESTED', 'React Native 강의를 신청합니다.', '2026-02-12 11:00:00', NULL, NULL, '2026-01-28 10:00:00', '2026-01-28 10:00:00'),
+(75, 'REQUESTED', 'Spring Security 강의를 신청합니다.', '2026-02-13 16:00:00', NULL, NULL, '2026-01-29 10:00:00', '2026-01-29 10:00:00'),
+-- SCHEDULED 상태 - 오늘 기준 가까운 날짜
+(76, 'SCHEDULED', 'Java 고급 문법 강의를 배우고 있습니다.', '2026-01-19 16:00:00', NULL, NULL, '2026-01-15 10:00:00', '2026-01-17 10:00:00'),
+(77, 'SCHEDULED', 'React 컴포넌트 최적화 강의를 배우고 있습니다.', '2026-01-20 11:00:00', NULL, NULL, '2026-01-16 10:00:00', '2026-01-17 10:00:00');
+
 -- =====================================================
 -- 10. Reviews (리뷰)
 -- =====================================================
@@ -852,3 +780,42 @@ VALUES (1, '@Autowired는 Spring의 의존성 주입(DI) 기능입니다. Spring
 -- 참고사항
 -- =====================================================
 -- 1. 비밀번호: 모든 사용자의 비밀번호는 'password123'입니다 (BCrypt 해시 사용)
+
+
+
+
+-- =====================================================
+-- 멘토 가용 시간 (mentor_availability)
+-- =====================================================
+-- 멘토 1: 월/수/금 14:00-20:00
+INSERT INTO mentor_availability (mentor_id, day_of_week, start_time, end_time, is_active, created_at, updated_at) VALUES
+(1, 'MONDAY', '14:00:00', '20:00:00', true, NOW(), NOW()),
+(1, 'WEDNESDAY', '14:00:00', '20:00:00', true, NOW(), NOW()),
+(1, 'FRIDAY', '14:00:00', '20:00:00', true, NOW(), NOW());
+
+-- 멘토 2: 화/목 10:00-18:00, 토 09:00-13:00
+INSERT INTO mentor_availability (mentor_id, day_of_week, start_time, end_time, is_active, created_at, updated_at) VALUES
+(2, 'TUESDAY', '10:00:00', '18:00:00', true, NOW(), NOW()),
+(2, 'THURSDAY', '10:00:00', '18:00:00', true, NOW(), NOW()),
+(2, 'SATURDAY', '09:00:00', '13:00:00', true, NOW(), NOW());
+
+-- 멘토 3: 평일 저녁 19:00-22:00
+INSERT INTO mentor_availability (mentor_id, day_of_week, start_time, end_time, is_active, created_at, updated_at) VALUES
+(3, 'MONDAY', '19:00:00', '22:00:00', true, NOW(), NOW()),
+(3, 'TUESDAY', '19:00:00', '22:00:00', true, NOW(), NOW()),
+(3, 'WEDNESDAY', '19:00:00', '22:00:00', true, NOW(), NOW()),
+(3, 'THURSDAY', '19:00:00', '22:00:00', true, NOW(), NOW()),
+(3, 'FRIDAY', '19:00:00', '22:00:00', true, NOW(), NOW());
+
+-- 멘토 4: 월/수 18:00-21:00, 토 10:00-16:00
+INSERT INTO mentor_availability (mentor_id, day_of_week, start_time, end_time, is_active, created_at, updated_at) VALUES
+(4, 'MONDAY', '18:00:00', '21:00:00', true, NOW(), NOW()),
+(4, 'WEDNESDAY', '18:00:00', '21:00:00', true, NOW(), NOW()),
+(4, 'SATURDAY', '10:00:00', '16:00:00', true, NOW(), NOW());
+
+-- 멘토 5: 화/목 19:00-22:00, 일 14:00-18:00
+INSERT INTO mentor_availability (mentor_id, day_of_week, start_time, end_time, is_active, created_at, updated_at) VALUES
+(5, 'TUESDAY', '19:00:00', '22:00:00', true, NOW(), NOW()),
+(5, 'THURSDAY', '19:00:00', '22:00:00', true, NOW(), NOW()),
+(5, 'SUNDAY', '14:00:00', '18:00:00', true, NOW(), NOW());
+

@@ -126,3 +126,35 @@ export interface Review {
   content?: string;
   createdAt: string;
 }
+
+// 예약 가능 시간 슬롯
+export interface TimeSlot {
+  time: string;        // "14:00"
+  available: boolean;
+  reason?: string;     // "이미 예약됨", "지난 시간" 등
+}
+
+// 멘토 가용 시간
+export interface MentorAvailability {
+  id: number;
+  dayOfWeek: string;      // "MONDAY", "TUESDAY", ...
+  dayOfWeekKr: string;    // "월요일", ...
+  startTime: string;      // "14:00"
+  endTime: string;        // "20:00"
+  isActive: boolean;
+}
+
+export interface MentorAvailabilityResponse {
+  mentorId: number;
+  mentorNickname: string;
+  availability: MentorAvailability[];
+}
+
+// 예약 가능 슬롯 조회 응답
+export interface AvailableSlotsResponse {
+  tutorialId: number;
+  date: string;          // "2026-01-20"
+  dayOfWeek: string;     // "MONDAY"
+  duration: number;      // 수업 시간 (분)
+  slots: TimeSlot[];
+}

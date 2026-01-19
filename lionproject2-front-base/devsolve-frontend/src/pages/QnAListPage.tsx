@@ -16,22 +16,22 @@ export default function QnAListPage() {
     const [filter, setFilter] = useState('전체');
 
     useEffect(() => {
-        fetchQuestions();
-    }, []);
-
-    const fetchQuestions = async () => {
-        setIsLoading(true);
-        try {
-            const response = await qnaApi.getMyQuestions(user?.role);
-            if (response.success && response.data) {
-                setQuestions(response.data);
+        const fetchQuestions = async () => {
+            setIsLoading(true);
+            try {
+                const response = await qnaApi.getMyQuestions(user?.role);
+                if (response.success && response.data) {
+                    setQuestions(response.data);
+                }
+            } catch (error) {
+                console.error('Failed to fetch questions:', error);
+            } finally {
+                setIsLoading(false);
             }
-        } catch (error) {
-            console.error('Failed to fetch questions:', error);
-        } finally {
-            setIsLoading(false);
-        }
-    };
+        };
+
+        fetchQuestions();
+    }, [user?.role]);
 
     // 필터링된 질문 목록
     const filteredQuestions = questions.filter(q => {

@@ -2,29 +2,25 @@ import { useState, useEffect } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Textarea } from '@/components/ui/textarea';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
-  DialogDescription,
   DialogTitle,
+  DialogDescription,
+  DialogFooter,
 } from '@/components/ui/dialog';
 import * as tutorialApi from '@/api/tutorial';
 import * as reviewApi from '@/api/review';
+import * as paymentApi from '@/api/payment';
 import { useAuth } from '@/contexts/AuthContext';
+import { LessonBookingDialog } from '@/components/booking/LessonBookingDialog';
+import { AvailabilityCalendar } from '@/components/booking/AvailabilityCalendar';
 import type { Tutorial } from '@/api/tutorial';
 import type { Review } from '@/api/review';
-
-// 시간 슬롯 타입 정의
-type TimeSlotStatus = 'available' | 'selected' | 'booked';
-
-interface TimeSlot {
-  time: string;
-  status: TimeSlotStatus;
-}
+import type { Ticket } from '@/api/payment';
 
 function formatDate(dateString: string): string {
   return new Date(dateString).toLocaleDateString('ko-KR', {
@@ -44,10 +40,12 @@ export default function TutorialDetailPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [selectedDate] = useState<number | null>(15);
-  const [selectedTime, setSelectedTime] = useState<string>('');
-  const [message, setMessage] = useState('');
+  // 예약 관련 상태
+  const [userTicket, setUserTicket] = useState<Ticket | null>(null);
+  const [isBookingDialogOpen, setIsBookingDialogOpen] = useState(false);
+  const [isPaymentDialogOpen, setIsPaymentDialogOpen] = useState(false);
+  const [isCheckingTicket, setIsCheckingTicket] = useState(false);
+  const [initialSelectedDate, setInitialSelectedDate] = useState<Date | undefined>();
 
   // Fetch tutorial and reviews
   useEffect(() => {
@@ -82,38 +80,57 @@ export default function TutorialDetailPage() {
     fetchData();
   }, [tutorialId]);
 
-  // 시간 슬롯 데이터 (09:00~20:00)
-  const initialTimeSlots: TimeSlot[] = [
-    { time: '09:00', status: 'available' },
-    { time: '10:00', status: 'booked' },
-    { time: '11:00', status: 'available' },
-    { time: '12:00', status: 'available' },
-    { time: '13:00', status: 'booked' },
-    { time: '14:00', status: 'available' },
-    { time: '15:00', status: 'available' },
-    { time: '16:00', status: 'booked' },
-    { time: '17:00', status: 'available' },
-    { time: '18:00', status: 'available' },
-    { time: '19:00', status: 'available' },
-    { time: '20:00', status: 'booked' },
-  ];
-
-  const getTimeSlotStyle = (slot: TimeSlot, isSelected: boolean) => {
-    if (isSelected) {
-      return 'bg-primary text-primary-foreground border-primary font-semibold';
-    }
-    if (slot.status === 'booked') {
-      return 'bg-muted text-muted-foreground cursor-not-allowed line-through';
-    }
-    return 'bg-background hover:bg-primary/10 hover:border-primary/50 cursor-pointer';
-  };
-
-  const handleApplyClick = () => {
+  // 수업 신청 버튼 클릭 핸들러
+  const handleApplyClick = async () => {
     if (!isAuthenticated) {
       navigate('/login');
       return;
     }
-    setIsDialogOpen(true);
+
+    if (!tutorial) return;
+
+    setIsCheckingTicket(true);
+
+    try {
+      // 해당 튜토리얼의 티켓 확인
+      const ticketsRes = await paymentApi.getMyTickets();
+
+      if (ticketsRes.success && ticketsRes.data) {
+        const myTicket = ticketsRes.data.find(
+          (t) => t.tutorialId === tutorial.id && t.remainingCount > 0 && !t.expired
+        );
+
+        if (myTicket) {
+          // 티켓 있음 → 예약 다이얼로그 열기
+          setUserTicket(myTicket);
+          setIsBookingDialogOpen(true);
+        } else {
+          // 티켓 없음 → 결제 안내 다이얼로그
+          setIsPaymentDialogOpen(true);
+        }
+      } else {
+        // API 실패 시에도 결제 안내
+        setIsPaymentDialogOpen(true);
+      }
+    } catch {
+      // 에러 시 결제 안내
+      setIsPaymentDialogOpen(true);
+    } finally {
+      setIsCheckingTicket(false);
+    }
+  };
+
+  // 예약 성공 핸들러
+  const handleBookingSuccess = () => {
+    // 예약 성공 후 처리 (예: 마이페이지로 이동 또는 알림)
+    alert('수업 신청이 완료되었습니다!');
+    navigate('/mypage');
+  };
+
+  // 달력에서 날짜 선택 시 예약 다이얼로그 열기
+  const handleCalendarDateSelect = (date: Date) => {
+    setInitialSelectedDate(date);
+    handleApplyClick();
   };
 
   if (isLoading) {
@@ -185,9 +202,13 @@ export default function TutorialDetailPage() {
 
           {/* Skills */}
           <div className="flex flex-wrap gap-2 mt-6">
-            {tutorial.skills.map((skill) => (
-              <Badge key={skill.id} variant="secondary">{skill.name}</Badge>
-            ))}
+            {tutorial.skills.map((skill, index) => {
+              const skillName = typeof skill === 'string' ? skill : skill.name;
+              const skillKey = typeof skill === 'string' ? `skill-${index}` : skill.id;
+              return (
+                <Badge key={skillKey} variant="secondary">{skillName}</Badge>
+              );
+            })}
           </div>
         </div>
 
@@ -299,9 +320,19 @@ export default function TutorialDetailPage() {
                   <Button
                     className="w-full h-12 shadow-lg shadow-primary/20 mb-3"
                     onClick={handleApplyClick}
+                    disabled={isCheckingTicket}
                   >
-                    수업 신청하기
-                    <span className="material-symbols-outlined ml-2">arrow_forward</span>
+                    {isCheckingTicket ? (
+                      <>
+                        <span className="material-symbols-outlined animate-spin mr-2">progress_activity</span>
+                        확인 중...
+                      </>
+                    ) : (
+                      <>
+                        수업 신청하기
+                        <span className="material-symbols-outlined ml-2">arrow_forward</span>
+                      </>
+                    )}
                   </Button>
                   <Button variant="secondary" className="w-full">
                     문의하기 (실시간 채팅)
@@ -309,159 +340,67 @@ export default function TutorialDetailPage() {
                 </CardContent>
               </Card>
 
-              {/* Availability Card */}
-              <Card className="bg-muted/50">
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-sm">현재 예약 현황</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-7 gap-1 text-center mb-4">
-                    {['월', '화', '수', '목', '금', '토', '일'].map((day) => (
-                      <div key={day} className="text-[10px] text-muted-foreground uppercase">
-                        {day}
-                      </div>
-                    ))}
-                    {[
-                      { status: 'smooth', label: '원활' },
-                      { status: 'smooth', label: '원활' },
-                      { status: 'slight', label: '조금' },
-                      { status: 'busy', label: '혼잡' },
-                      { status: 'smooth', label: '원활' },
-                      { status: 'unavailable', label: '불가' },
-                      { status: 'unavailable', label: '불가' },
-                    ].map((item, i) => (
-                      <div
-                        key={i}
-                        className={`h-7 rounded flex items-center justify-center text-[9px] font-medium ${
-                          item.status === 'smooth'
-                            ? 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-400'
-                            : item.status === 'slight'
-                            ? 'bg-yellow-500/20 text-yellow-600 dark:text-yellow-400'
-                            : item.status === 'busy'
-                            ? 'bg-orange-500/20 text-orange-600 dark:text-orange-400'
-                            : 'bg-muted text-muted-foreground'
-                        }`}
-                      >
-                        {item.label}
-                      </div>
-                    ))}
-                  </div>
-                  <div className="flex flex-wrap items-center justify-between gap-1 text-[10px] text-muted-foreground">
-                    <span className="flex items-center gap-1">
-                      <span className="w-2 h-2 rounded-full bg-emerald-500" /> 원활
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <span className="w-2 h-2 rounded-full bg-yellow-500" /> 조금 혼잡
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <span className="w-2 h-2 rounded-full bg-orange-500" /> 혼잡
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <span className="w-2 h-2 rounded-full bg-muted-foreground" /> 불가
-                    </span>
-                  </div>
-                </CardContent>
-              </Card>
+              {/* Availability Calendar */}
+              <AvailabilityCalendar
+                tutorialId={tutorial.id}
+                mentorId={tutorial.mentorId}
+                onDateSelect={handleCalendarDateSelect}
+              />
             </div>
           </aside>
         </div>
 
-        {/* 수업 신청서 팝업 */}
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogContent className="max-w-[640px] p-0 gap-0 overflow-hidden">
-            <DialogHeader className="px-8 pt-8 pb-4">
-              <DialogTitle className="text-2xl font-bold">수업 신청하기</DialogTitle>
-              <DialogDescription className="sr-only">수업 신청 다이얼로그</DialogDescription>
+        {/* 티켓 보유 시: 달력 기반 예약 다이얼로그 */}
+        {userTicket && (
+          <LessonBookingDialog
+            open={isBookingDialogOpen}
+            onOpenChange={(open) => {
+              setIsBookingDialogOpen(open);
+              if (!open) setInitialSelectedDate(undefined);  // 다이얼로그 닫힐 때 초기 날짜 초기화
+            }}
+            tutorial={tutorial}
+            ticket={userTicket}
+            onSuccess={handleBookingSuccess}
+            initialDate={initialSelectedDate}
+          />
+        )}
+
+        {/* 티켓 미보유 시: 결제 안내 다이얼로그 */}
+        <Dialog open={isPaymentDialogOpen} onOpenChange={setIsPaymentDialogOpen}>
+          <DialogContent className="max-w-md">
+            <DialogHeader>
+              <DialogTitle>수강권 구매 필요</DialogTitle>
+              <DialogDescription>
+                이 과외를 예약하려면 먼저 수강권을 구매해야 합니다.
+              </DialogDescription>
             </DialogHeader>
 
-            <div className="px-8 py-4 space-y-6">
-              {/* Summary Card */}
-              <div className="flex items-center gap-4 rounded-lg bg-muted/50 p-5 border">
-                <div className="w-20 h-20 bg-primary/20 rounded-lg flex items-center justify-center shrink-0">
-                  <span className="material-symbols-outlined text-4xl text-primary">school</span>
+            <div className="py-4">
+              <div className="flex items-center gap-4 rounded-lg bg-muted/50 p-4 border">
+                <div className="w-16 h-16 bg-primary/20 rounded-lg flex items-center justify-center shrink-0">
+                  <span className="material-symbols-outlined text-3xl text-primary">school</span>
                 </div>
-                <div className="flex flex-col gap-1 flex-1">
-                  <p className="text-muted-foreground text-xs font-semibold uppercase tracking-wider">선택한 수업</p>
-                  <p className="text-lg font-bold leading-tight">{tutorial.title}</p>
-                  <div className="flex items-center justify-between mt-1">
-                    <p className="text-primary text-sm font-medium">1:1 맞춤형 멘토링</p>
-                    <p className="text-lg font-bold">₩{tutorial.price.toLocaleString()}</p>
-                  </div>
+                <div className="flex-1">
+                  <p className="font-bold">{tutorial.title}</p>
+                  <p className="text-sm text-muted-foreground">{tutorial.duration}분 수업</p>
+                  <p className="text-lg font-bold text-primary mt-1">
+                    ₩{tutorial.price.toLocaleString()} / 회
+                  </p>
                 </div>
-              </div>
-
-              {/* Date & Time Section */}
-              <div className="space-y-4">
-                {/* Selected Date Display */}
-                <div className="flex items-center gap-3 p-4 bg-muted/50 rounded-lg border">
-                  <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center">
-                    <span className="material-symbols-outlined text-primary text-2xl">calendar_today</span>
-                  </div>
-                  <div>
-                    <p className="text-xs text-muted-foreground font-medium">선택한 날짜</p>
-                    <p className="font-bold">2024년 5월 {selectedDate}일 (수)</p>
-                  </div>
-                </div>
-
-                {/* Time Slots Grid */}
-                <div className="space-y-3">
-                  <label className="block font-semibold">시간 선택</label>
-                  <div className="grid grid-cols-4 gap-2">
-                    {initialTimeSlots.map((slot) => (
-                      <button
-                        key={slot.time}
-                        onClick={() => slot.status !== 'booked' && setSelectedTime(slot.time)}
-                        disabled={slot.status === 'booked'}
-                        className={`py-3 px-2 rounded-lg border text-sm transition-all ${getTimeSlotStyle(slot, selectedTime === slot.time)}`}
-                      >
-                        {slot.time}
-                      </button>
-                    ))}
-                  </div>
-
-                  {/* Legend */}
-                  <div className="flex items-center gap-4 pt-2 text-xs text-muted-foreground">
-                    <span className="flex items-center gap-1.5">
-                      <span className="w-3 h-3 rounded bg-primary"></span>
-                      선택됨
-                    </span>
-                    <span className="flex items-center gap-1.5">
-                      <span className="w-3 h-3 rounded bg-muted border"></span>
-                      예약 완료
-                    </span>
-                    <span className="flex items-center gap-1.5">
-                      <span className="w-3 h-3 rounded bg-background border"></span>
-                      선택 가능
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Message Section */}
-              <div className="space-y-3">
-                <label className="block font-semibold">멘토에게 전달할 메시지</label>
-                <Textarea
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value.slice(0, 500))}
-                  placeholder="배우고 싶은 내용을 상세히 적어주세요 (예: 특정 코드 리뷰 요청, 아키텍처 상담 등)"
-                  className="min-h-[120px] resize-none"
-                />
-                <p className="text-right text-muted-foreground text-xs">{message.length} / 500</p>
               </div>
             </div>
 
-            {/* Action Footer */}
-            <div className="px-8 py-6 bg-muted/50 flex items-center justify-end gap-3 border-t">
-              <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setIsPaymentDialogOpen(false)}>
                 취소
               </Button>
-              <Button className="shadow-lg" asChild>
+              <Button asChild>
                 <Link to={`/payment/${tutorial.id}`}>
-                  <span>신청 및 결제하기</span>
-                  <span className="material-symbols-outlined text-[20px] ml-2">payments</span>
+                  수강권 구매하기
+                  <span className="material-symbols-outlined ml-2">payments</span>
                 </Link>
               </Button>
-            </div>
+            </DialogFooter>
           </DialogContent>
         </Dialog>
       </main>

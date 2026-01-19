@@ -4,8 +4,10 @@ import com.example.lionproject2backend.lesson.dto.*;
 import com.example.lionproject2backend.lesson.domain.Lesson;
 import com.example.lionproject2backend.lesson.domain.LessonStatus;
 import com.example.lionproject2backend.lesson.repository.LessonRepository;
+import com.example.lionproject2backend.mentor.service.MentorScheduleService;
 import com.example.lionproject2backend.ticket.domain.Ticket;
 import com.example.lionproject2backend.ticket.repository.TicketRepository;
+import com.example.lionproject2backend.tutorial.domain.Tutorial;
 import com.example.lionproject2backend.global.exception.custom.CustomException;
 import com.example.lionproject2backend.global.exception.custom.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +25,7 @@ public class LessonServiceImpl implements LessonService {
 
     private final LessonRepository lessonRepository;
     private final TicketRepository ticketRepository;
+    private final MentorScheduleService mentorScheduleService;
 
     /**
      * 수업 신청 (이용권 기반)
@@ -45,11 +48,20 @@ public class LessonServiceImpl implements LessonService {
             throw new CustomException(ErrorCode.TICKET_EXHAUSTED);
         }
 
+        Tutorial tutorial = ticket.getTutorial();
+        LocalDateTime scheduledAt = LocalDateTime.of(request.getLessonDate(), request.getLessonTime());
+
+        // 멘토 가용 시간 검증
+        validateMentorAvailability(tutorial.getMentor().getId(), scheduledAt, tutorial.getDuration());
+
+        // 중복 예약 검증
+        validateNoConflict(tutorial.getId(), scheduledAt);
+
         // Lesson 생성 (내부에서 ticket.use() 호출)
         Lesson lesson = Lesson.register(
                 ticket,
                 request.getRequestMessage(),
-                LocalDateTime.of(request.getLessonDate(), request.getLessonTime())
+                scheduledAt
         );
 
         Lesson savedLesson = lessonRepository.save(lesson);
@@ -176,5 +188,39 @@ public class LessonServiceImpl implements LessonService {
         );
 
         return GetCalendarLessonsResponse.from(lessons);
+    }
+
+    // =============== 검증 메서드 =============== //
+
+    /**
+     * 멘토 가용 시간 검증
+     */
+    private void validateMentorAvailability(Long mentorId, LocalDateTime scheduledAt, int durationMinutes) {
+        boolean available = mentorScheduleService.isAvailable(mentorId, scheduledAt, durationMinutes);
+
+        if (!available) {
+            throw new IllegalStateException("멘토의 가용 시간이 아닙니다. 다른 시간을 선택해주세요.");
+        }
+    }
+
+    /**
+     * 중복 예약 검증
+     */
+    private void validateNoConflict(Long tutorialId, LocalDateTime scheduledAt) {
+        List<LessonStatus> activeStatuses = List.of(
+                LessonStatus.REQUESTED,
+                LessonStatus.CONFIRMED,
+                LessonStatus.SCHEDULED
+        );
+
+        boolean hasConflict = lessonRepository.existsConflictingLesson(
+                tutorialId,
+                scheduledAt,
+                activeStatuses
+        );
+
+        if (hasConflict) {
+            throw new IllegalStateException("해당 시간에 이미 예약된 수업이 있습니다.");
+        }
     }
 }

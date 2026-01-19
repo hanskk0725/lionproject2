@@ -143,6 +143,76 @@ export const getSkills = async (): Promise<ApiResponse<Skill[]>> => {
   return response.data;
 };
 
+// 멘토 가용 시간 타입
+export interface MentorAvailabilityItem {
+  id: number;
+  dayOfWeek: string;      // "MONDAY", "TUESDAY", ...
+  dayOfWeekKr: string;    // "월요일", ...
+  startTime: string;      // "14:00:00"
+  endTime: string;        // "20:00:00"
+  active: boolean;        // 백엔드 응답 필드명
+}
+
+export interface MentorAvailabilityResponse {
+  mentorId: number;
+  mentorNickname: string;
+  availability: MentorAvailabilityItem[];
+}
+
+/**
+ * 멘토 가용 시간 조회 (공개)
+ */
+export const getMentorAvailability = async (
+  mentorId: number
+): Promise<ApiResponse<MentorAvailabilityResponse>> => {
+  const response = await api.get<ApiResponse<MentorAvailabilityResponse>>(
+    `/api/mentors/${mentorId}/availability`
+  );
+  return response.data;
+};
+
+/**
+ * 내 가용 시간 조회 (멘토 본인)
+ */
+export const getMyAvailability = async (): Promise<ApiResponse<MentorAvailabilityResponse>> => {
+  const response = await api.get<ApiResponse<MentorAvailabilityResponse>>(
+    '/api/mentors/me/availability'
+  );
+  return response.data;
+};
+
+// 가용 시간 등록 요청 타입
+export interface AddAvailabilityRequest {
+  dayOfWeek: string;  // "MONDAY", "TUESDAY", ...
+  startTime: string;  // "HH:mm" 형식
+  endTime: string;    // "HH:mm" 형식
+}
+
+/**
+ * 가용 시간 등록 (멘토 본인)
+ */
+export const addMyAvailability = async (
+  request: AddAvailabilityRequest
+): Promise<ApiResponse<MentorAvailabilityItem>> => {
+  const response = await api.post<ApiResponse<MentorAvailabilityItem>>(
+    '/api/mentors/me/availability',
+    request
+  );
+  return response.data;
+};
+
+/**
+ * 가용 시간 삭제 (멘토 본인)
+ */
+export const deleteMyAvailability = async (
+  availabilityId: number
+): Promise<ApiResponse<void>> => {
+  const response = await api.delete<ApiResponse<void>>(
+    `/api/mentors/me/availability/${availabilityId}`
+  );
+  return response.data;
+};
+
 /**
  * 내 멘토 프로필 조회 (인증 필요)
  */
