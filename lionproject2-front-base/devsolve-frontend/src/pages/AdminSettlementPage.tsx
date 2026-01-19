@@ -175,15 +175,15 @@ export default function AdminSettlementPage() {
 
   if (authLoading || isLoading) {
     return (
-      <div className="pt-16 min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <span className="material-symbols-outlined animate-spin text-4xl text-primary">progress_activity</span>
       </div>
     );
   }
 
   return (
-    <div className="pt-16">
-      <div className="max-w-7xl mx-auto px-4 py-8">
+    <div>
+      <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8 flex items-start justify-between">
           <div>
