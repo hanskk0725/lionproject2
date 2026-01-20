@@ -18,6 +18,7 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '21'
+          cache: 'gradle'
 
       - name: Build with Gradle
         run: |
@@ -33,7 +34,9 @@ jobs:
       - name: Build and Push Docker image
         run: |
           docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/devsolve-backend:latest .
+          docker tag ${{ secrets.DOCKERHUB_USERNAME }}/devsolve-backend:latest ${{ secrets.DOCKERHUB_USERNAME }}/devsolve-backend:${{ github.sha }}
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/devsolve-backend:latest
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/devsolve-backend:${{ github.sha }}
 
       - name: Deploy to EC2
         uses: appleboy/ssh-action@v0.1.8
@@ -44,50 +47,49 @@ jobs:
           port: 22
           timeout: 60s
           command_timeout: 20m
-          envs: DB_URL,DB_USERNAME,DB_PASSWORD,JWT_SECRET,PORTONE_STORE_ID,PORTONE_CHANNEL_KEY,PORTONE_API_SECRET,INICIS_MID,INICIS_SIGNKEY,INICIS_API_KEY,INICIS_API_IV,CORS_ALLOWED_ORIGINS,DOCKERHUB_USERNAME
+          envs: DOCKERHUB_USERNAME
           script: |
-            # Cleanup old Docker images to free disk space
+            set -e
+
+            echo "🧹 Cleaning up old Docker resources..."
             docker system prune -af --volumes || true
 
-            # Create .env file
-            cat > /home/ec2-user/.env << EOF
-            DB_URL=$DB_URL
-            DB_USERNAME=$DB_USERNAME
-            DB_PASSWORD=$DB_PASSWORD
-            JWT_SECRET=$JWT_SECRET
-            PORTONE_STORE_ID=$PORTONE_STORE_ID
-            PORTONE_CHANNEL_KEY=$PORTONE_CHANNEL_KEY
-            PORTONE_API_SECRET=$PORTONE_API_SECRET
-            INICIS_MID=$INICIS_MID
-            INICIS_SIGNKEY=$INICIS_SIGNKEY
-            INICIS_API_KEY=$INICIS_API_KEY
-            INICIS_API_IV=$INICIS_API_IV
-            CORS_ALLOWED_ORIGINS=$CORS_ALLOWED_ORIGINS
-            EOF
-
-            # Stop and remove existing container
+            echo "🛑 Stopping existing container..."
             docker stop devsolve-backend || true
             docker rm devsolve-backend || true
 
-            # Pull latest image and run
+            echo "📥 Pulling latest image..."
             docker pull $DOCKERHUB_USERNAME/devsolve-backend:latest
+
+            echo "🚀 Starting new container..."
             docker run -d \
               --name devsolve-backend \
               --restart unless-stopped \
               -p 8080:8080 \
               --env-file /home/ec2-user/.env \
               $DOCKERHUB_USERNAME/devsolve-backend:latest
+
+            echo "⏳ Waiting for application to start..."
+            sleep 15
+
+            echo "🔍 Health check..."
+            for i in {1..12}; do
+              if curl -sf http://localhost:8080/actuator/health > /dev/null 2>&1; then
+                echo "✅ Application is healthy!"
+                break
+              fi
+              if [ $i -eq 12 ]; then
+                echo "❌ Health check failed!"
+                docker logs devsolve-backend --tail 50
+                exit 1
+              fi
+              echo "Attempt $i/12: Waiting..."
+              sleep 10
+            done
+
+            echo "📊 Container Status:"
+            docker ps | grep devsolve
+
+            echo "✅ Deployment complete!"
         env:
-          DB_URL: ${{ secrets.DB_URL }}
-          DB_USERNAME: ${{ secrets.DB_USERNAME }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          JWT_SECRET: ${{ secrets.JWT_SECRET }}
-          PORTONE_STORE_ID: ${{ secrets.PORTONE_STORE_ID }}
-          PORTONE_CHANNEL_KEY: ${{ secrets.PORTONE_CHANNEL_KEY }}
-          PORTONE_API_SECRET: ${{ secrets.PORTONE_API_SECRET }}
-          INICIS_MID: ${{ secrets.INICIS_MID }}
-          INICIS_SIGNKEY: ${{ secrets.INICIS_SIGNKEY }}
-          INICIS_API_KEY: ${{ secrets.INICIS_API_KEY }}
-          INICIS_API_IV: ${{ secrets.INICIS_API_IV }}
-          CORS_ALLOWED_ORIGINS: ${{ secrets.CORS_ALLOWED_ORIGINS }}
           DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
